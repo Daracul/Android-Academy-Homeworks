@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SecondActivity extends AppCompatActivity {
-    public static final String MY_TEXT_KEY = "my_key" ;
+    private static final String MY_TEXT_KEY = "my_key" ;
     private TextView textView;
     private Button emailButton;
 
