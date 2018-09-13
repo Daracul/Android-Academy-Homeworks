@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">First Exercize App</string>
+    <string name="activity_main_edit_text">Type your message here</string>
+    <string name="activity_main_button_preview">Preview</string>
+    <string name="second_activity_text_view">We love Android!</string>
+    <string name="second_activity_button">EMAIL</string>
+    <string name="toast_text_no_email_clients">No Email app found</string>
+</resources>

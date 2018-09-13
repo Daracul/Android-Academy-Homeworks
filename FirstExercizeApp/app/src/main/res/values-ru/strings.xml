@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">First Exercize App</string>
+    <string name="activity_main_edit_text">Введите ваше сообщение</string>
+    <string name="activity_main_button_preview">Предпросмотр</string>
+    <string name="toast_text_no_email_clients">У вас не установлено приложение для электронной почты</string>
+</resources>
