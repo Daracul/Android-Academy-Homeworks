@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Second Exercize App</string>
+    <string name="about_me">Alexey has been started to learn Java at the end off 2016, before this he never had a development experience. Now he is studying Android development in Android Academy and have made some simple apps.</string>
+    <string name="edit_text_hint">Enter a message...</string>
+    <string name="send_message_button">send message</string>
+    <string name="first_job_title">IT Specialist</string>
+    <string name="studying_job_title">Engeneer</string>
+    <string name="current_job_title">Android Student</string>
+    <string name="my_name">Alexey Malakhov</string>
+    <string name="toast_text_no_email_clients">There is no installed email clients</string>
+    <string name="edit_text_empty_message">The text box is empty</string>
+</resources>

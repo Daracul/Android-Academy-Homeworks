@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_start">50dp</dimen>
+    <dimen name="padding_half_standart">8dp</dimen>
+    <dimen name="margin_half_standart">8dp</dimen>
+    <dimen name="margin_standart">16dp</dimen>
+    <dimen name="icon_size">28dp</dimen>
+    <dimen name="standart_text_size">16sp</dimen>
+    <dimen name="text_high">28dp</dimen>
+    <dimen name="image_height">200dp</dimen>
+</resources>
