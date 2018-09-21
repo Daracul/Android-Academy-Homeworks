@@ -5,11 +5,14 @@ import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String INSTAGRAM_URL = "https://www.instagram.com/daracul/?hl=ru";
     private static final String FACEBOOK_URL = "https://www.facebook.com/alexey.malakhov.9";
     private static final String VK_URL = "https://vk.com/id171214";
+    private static final String DISCLAIMER_TEXT = "© 2018 Alexey Malakhov";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +37,19 @@ public class MainActivity extends AppCompatActivity {
         setupTextViews();
         setupSendButton();
         setupSocialNetworkButtons();
+        setupDisclaimer();
 
+    }
 
+    private void setupDisclaimer() {
+        LinearLayout bottomLinearLayout = (LinearLayout)findViewById(R.id.bottom_ll);
+        TextView disclaimerTextView = new TextView(this);
+        disclaimerTextView.setText(DISCLAIMER_TEXT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.END;
+        disclaimerTextView.setLayoutParams(params);
+        bottomLinearLayout.addView(disclaimerTextView);
     }
 
     private void setupSocialNetworkButtons() {
