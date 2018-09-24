@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Second Exercize App</string>
+    <string name="edit_text_hint">Введите сообщение ...</string>
+    <string name="send_message_button">Отправить</string>
+    <string name="first_job_title">IT специалист</string>
+    <string name="studying_job_title">Инженер</string>
+    <string name="current_job_title">Студент Android</string>
+    <string name="my_name">Алекей Малахов</string>
+    <string name="toast_text_no_email_clients">На телефоне не установлено почтовых клиентов</string>
+    <string name="edit_text_empty_message">Вы ничего не ввели</string>
+    <string name="disclaimer_text">© 2018 Алексей Малахов</string>
+    <string name="about_me">Алексей начал изучать Java в конце 2016 года, до этого не имея никакого опыта в программировании. Теперь он обучается в Android академии и уже сделал пару простых приложений.</string>
+</resources>

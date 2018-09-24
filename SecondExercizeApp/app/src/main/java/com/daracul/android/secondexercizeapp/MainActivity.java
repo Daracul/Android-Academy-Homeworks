@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String INSTAGRAM_URL = "https://www.instagram.com/daracul/?hl=ru";
     private static final String FACEBOOK_URL = "https://www.facebook.com/alexey.malakhov.9";
     private static final String VK_URL = "https://vk.com/id171214";
-    private static final String DISCLAIMER_TEXT = "© 2018 Alexey Malakhov";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupDisclaimer() {
         LinearLayout bottomLinearLayout = (LinearLayout)findViewById(R.id.bottom_ll);
         TextView disclaimerTextView = new TextView(this);
-        disclaimerTextView.setText(DISCLAIMER_TEXT);
+        disclaimerTextView.setText(R.string.disclaimer_text);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.END;

@@ -4,9 +4,10 @@
     <string name="edit_text_hint">Enter a message...</string>
     <string name="send_message_button">send message</string>
     <string name="first_job_title">IT Specialist</string>
-    <string name="studying_job_title">Engeneer</string>
+    <string name="studying_job_title">Engineer</string>
     <string name="current_job_title">Android Student</string>
     <string name="my_name">Alexey Malakhov</string>
     <string name="toast_text_no_email_clients">There is no installed email clients</string>
     <string name="edit_text_empty_message">The text box is empty</string>
+    <string name="disclaimer_text">© 2018 Alexey Malakhov</string>
 </resources>
