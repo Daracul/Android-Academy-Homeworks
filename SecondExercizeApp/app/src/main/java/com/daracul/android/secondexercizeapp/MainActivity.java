@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,12 +42,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupDisclaimer() {
-        LinearLayout bottomLinearLayout = (LinearLayout)findViewById(R.id.bottom_ll);
+        RelativeLayout bottomLinearLayout = findViewById(R.id.bottom_ll);
         TextView disclaimerTextView = new TextView(this);
         disclaimerTextView.setText(R.string.disclaimer_text);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.END;
+        params.addRule(RelativeLayout.BELOW, R.id.facebook_image_view);
+        params.addRule(RelativeLayout.ALIGN_PARENT_END);
         disclaimerTextView.setLayoutParams(params);
         bottomLinearLayout.addView(disclaimerTextView);
     }
