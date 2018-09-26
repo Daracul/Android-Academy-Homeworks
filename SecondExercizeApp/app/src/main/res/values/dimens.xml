@@ -12,4 +12,5 @@
     <dimen name="image_height_large">400dp</dimen>
     <dimen name="image_width_large">450dp</dimen>
     <dimen name="divider_height">1dp</dimen>
+    <dimen name="app_bar_height">250dp</dimen>
 </resources>

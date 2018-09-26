@@ -2,6 +2,7 @@ package com.daracul.android.secondexercizeapp;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,10 +30,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar!=null){
-            actionBar.setTitle(R.string.my_name);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
+        if (collapsingToolbarLayout!=null){
+            collapsingToolbarLayout.setTitle(this.getResources().getString(R.string.my_name));
         }
+
 
         setupTextViews();
         setupSendButton();
