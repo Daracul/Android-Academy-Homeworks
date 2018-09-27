@@ -1,165 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="@dimen/image_height_large"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-
-        <LinearLayout
-            android:id="@+id/linear_layout_with_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:focusableInTouchMode="true"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/image_height_large"
-                android:scaleType="centerCrop"
-                android:src="@drawable/me_black" />
-
-            <TextView
-                android:id="@+id/first_job_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_half_standart"
-                android:layout_marginEnd="@dimen/margin_standart"
-                android:layout_marginStart="@dimen/margin_start"
-                android:layout_marginTop="@dimen/margin_standart"
-                android:drawablePadding="@dimen/margin_half_standart"
-                android:drawableStart="@drawable/baseline_account_circle_24"
-                android:textSize="@dimen/standart_text_size"
-                tools:text="@string/first_job_title" />
-
-            <TextView
-                android:id="@+id/second_job_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_half_standart"
-                android:layout_marginEnd="@dimen/margin_standart"
-                android:layout_marginStart="@dimen/margin_start"
-                android:layout_marginTop="@dimen/margin_half_standart"
-                android:drawablePadding="@dimen/margin_half_standart"
-                android:drawableStart="@drawable/baseline_build_24"
-                android:orientation="horizontal"
-                android:textSize="@dimen/standart_text_size"
-                tools:text="@string/studying_job_title">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/third_job_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_half_standart"
-                android:layout_marginEnd="@dimen/margin_standart"
-                android:layout_marginStart="@dimen/margin_start"
-                android:layout_marginTop="@dimen/margin_half_standart"
-                android:drawablePadding="@dimen/margin_half_standart"
-                android:drawableStart="@drawable/baseline_android_24"
-                android:orientation="horizontal"
-                android:textSize="@dimen/standart_text_size"
-                tools:text="@string/current_job_title" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/margin_half_standart"
-                android:layout_marginEnd="@dimen/margin_standart"
-                android:layout_marginStart="@dimen/margin_start"
-                android:layout_marginTop="@dimen/margin_half_standart"
-                android:background="@color/blue" />
-
-            <TextView
-                android:id="@+id/info_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_half_standart"
-                android:layout_marginEnd="@dimen/margin_standart"
-                android:layout_marginStart="@dimen/margin_start"
-                android:layout_marginTop="@dimen/margin_half_standart"
-                android:textSize="@dimen/standart_text_size"
-                tools:text="@string/about_me" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/margin_half_standart"
-                android:layout_marginEnd="@dimen/margin_standart"
-                android:layout_marginStart="@dimen/margin_start"
-                android:layout_marginTop="@dimen/margin_half_standart"
-                android:background="@color/blue" />
-
-            <EditText
-                android:id="@+id/send_message_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_half_standart"
-                android:layout_marginEnd="@dimen/margin_standart"
-                android:layout_marginStart="@dimen/margin_start"
-                android:layout_marginTop="@dimen/margin_half_standart"
-                android:backgroundTint="@color/blue"
-                android:hint="@string/edit_text_hint"
-                android:inputType="text" />
-
-            <Button
-                android:id="@+id/send_message_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginBottom="@dimen/margin_half_standart"
-                android:layout_marginEnd="@dimen/margin_standart"
-                android:layout_marginTop="@dimen/margin_half_standart"
-                android:background=" #0000"
-                android:text="@string/send_message_button"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/standart_text_size" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/bottom_ll"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/linear_layout_with_info">
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:toolbarId="@+id/toolbar">
 
             <ImageView
-                android:id="@+id/instagram_image_view"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_margin="@dimen/margin_half_standart"
-                android:layout_toStartOf="@id/facebook_image_view"
-                android:src="@drawable/instagram" />
+                android:id="@+id/photo"
+                android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/me_black"
+                app:layout_collapseMode="parallax"
+                />
 
-            <ImageView
-                android:id="@+id/facebook_image_view"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="@dimen/margin_half_standart"
-                android:src="@drawable/facebook" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <ImageView
-                android:id="@+id/vk_image_view"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_margin="@dimen/margin_half_standart"
-                android:layout_toEndOf="@id/facebook_image_view"
-                android:src="@drawable/vk" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        </RelativeLayout>
+    <include layout="@layout/content_scrolling" />
 
 
-    </RelativeLayout>
 
-
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,21 +2,19 @@ package com.daracul.android.secondexercizeapp;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String EMAIL_ADDRESS = "au.malakhov@gmail.com";
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         currentJobTitle.setText(R.string.current_job_title);
 
         TextView infoTextView = (TextView)findViewById(R.id.info_text_view);
-        infoTextView.setText(R.string.about_me);
+        infoTextView.setText(R.string.large_text);
     }
 
     private void setupSendButton() {
