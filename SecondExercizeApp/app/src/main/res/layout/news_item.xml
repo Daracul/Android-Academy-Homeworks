@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -15,37 +14,34 @@
             android:id="@+id/category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="@dimen/margin_standart"
+            android:layout_marginTop="@dimen/margin_standart"
+            android:layout_marginBottom="@dimen/margin_small"
             android:maxLines="1"
             android:textAllCaps="true"
-            android:textSize="16sp"
+            android:textSize="@dimen/standart_text_size"
             tools:text="@tools:sample/full_names" />
 
         <TextView
             android:id="@+id/topic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_below="@id/category"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
             android:layout_toStartOf="@id/news_picture"
             android:maxLines="2"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text="@tools:sample/lorem" />
+            tools:text="@tools:sample/lorem"
+            style="@style/TitleStyle" />
 
         <TextView
             android:id="@+id/preview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/topic"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
+            android:textColor="@color/black"
+            android:layout_marginStart="@dimen/margin_standart"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
             android:layout_toStartOf="@id/news_picture"
             android:maxLines="3"
             tools:text="@tools:sample/lorem/random" />
@@ -56,9 +52,9 @@
             android:layout_height="110dp"
             android:layout_alignTop="@+id/topic"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="@dimen/margin_standart"
+            android:layout_marginEnd="@dimen/margin_standart"
+            android:layout_marginBottom="@dimen/margin_standart"
             android:contentDescription="@null"
             tools:src="@tools:sample/avatars" />
 
@@ -67,9 +63,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/preview"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="@dimen/margin_standart"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_standart"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:text="@tools:sample/date/ddmmyy" />
