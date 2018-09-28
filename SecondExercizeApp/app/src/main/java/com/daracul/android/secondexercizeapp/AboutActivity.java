@@ -2,22 +2,20 @@ package com.daracul.android.secondexercizeapp;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class AboutActivity extends AppCompatActivity {
     private static final String EMAIL_ADDRESS = "au.malakhov@gmail.com";
     private static final String EMAIL_SUBJECT = "Buisness letter";
     private static final String INSTAGRAM_URL = "https://www.instagram.com/daracul/?hl=ru";
@@ -27,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_about);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar!=null){
@@ -107,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 String textToSend = editText.getText().toString();
                 if (!textToSend.isEmpty()){
                     startEmailClient(textToSend);
-                } else Toast.makeText(MainActivity.this, R.string.edit_text_empty_message,
+                } else Toast.makeText(AboutActivity.this, R.string.edit_text_empty_message,
                         Toast.LENGTH_SHORT).show();
             }
         });
