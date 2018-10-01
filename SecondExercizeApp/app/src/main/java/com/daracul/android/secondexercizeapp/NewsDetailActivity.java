@@ -7,15 +7,18 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import com.daracul.android.secondexercizeapp.data.DataUtils;
 import com.daracul.android.secondexercizeapp.data.NewsItem;
 import com.daracul.android.secondexercizeapp.utils.Utils;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class NewsDetailActivity extends AppCompatActivity {
     private static final String KEY_FOR_POSITION = "position_key";
@@ -55,10 +58,13 @@ public class NewsDetailActivity extends AppCompatActivity {
     }
 
     private void setupActionBar(int position, String title) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar!=null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(title);
+
+        CollapsingToolbarLayout toolbarLayout = findViewById(R.id.collapsing_toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (toolbarLayout!=null){
+            toolbarLayout.setTitle(title);
         }
     }
 
