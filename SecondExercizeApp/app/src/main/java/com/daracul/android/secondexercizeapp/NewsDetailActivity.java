@@ -62,8 +62,9 @@ public class NewsDetailActivity extends AppCompatActivity {
         CollapsingToolbarLayout toolbarLayout = findViewById(R.id.collapsing_toolbar);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (toolbarLayout!=null){
+        ActionBar actionBar = getSupportActionBar();
+        if (toolbarLayout!=null&&actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
             toolbarLayout.setTitle(title);
         }
     }

@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.daracul.android.secondexercizeapp.data.Category;
 import com.daracul.android.secondexercizeapp.data.NewsItem;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 import java.util.List;
@@ -14,34 +16,60 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder>{
-    private static final int IMAGE_DP = 110;
     @NonNull
     private final List<NewsItem> news;
     @NonNull
     private final LayoutInflater inflater;
     @NonNull
     private final OnItemClickListener clickListener;
-    private final int picturePixels;
+    private boolean isHorizontal;
 
 
     public NewsRecyclerAdapter(@NonNull Context context, @NonNull List<NewsItem> news,
                                @NonNull OnItemClickListener clickListener) {
         this.news = news;
         this.inflater=LayoutInflater.from(context);
-        this.picturePixels = Utils.convertDpToPixel(IMAGE_DP, context);
         this.clickListener = clickListener;
+        this.isHorizontal = Utils.isHorizontal(context);
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(inflater.inflate(R.layout.news_item, parent, false), clickListener);
+        View view;
+        if (isHorizontal){
+            view = inflater.inflate(R.layout.news_item, parent, false);
+        } else {
+            switch (viewType) {
+                case Category.CATEGORY_CRIMINAL:
+                    view = inflater.inflate(R.layout.news_item, parent, false);
+                    break;
+                case Category.CATEGORY_DARWIN:
+                    view = inflater.inflate(R.layout.news_item2, parent, false);
+                    break;
+                case Category.CATEGORY_ANIMAL:
+                    view = inflater.inflate(R.layout.news_item3, parent, false);
+                    break;
+                case Category.CATEGORY_MUSIC:
+                    view = inflater.inflate(R.layout.news_item4, parent, false);
+                    break;
+                default:
+                    view = inflater.inflate(R.layout.news_item, parent, false);
+                    break;
+            }
+        }
+        return new ViewHolder(view, clickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(news.get(position));
 
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return news.get(position).getCategory().getId();
     }
 
     @Override
@@ -85,7 +113,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
             topicTextView.setText(newsItem.getTitle());
             previewTextView.setText(newsItem.getPreviewText());
             dateTextView.setText(Utils.convertDateToString(newsItem.getPublishDate()));
-            Utils.loadImageAndSetToView(newsItem.getImageUrl(),pictureView, picturePixels);
+            Utils.loadImageAndSetToView(newsItem.getImageUrl(),pictureView);
         }
     }
 }

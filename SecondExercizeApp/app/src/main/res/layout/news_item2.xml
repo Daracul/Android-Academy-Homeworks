@@ -12,6 +12,7 @@
 
         <TextView
             android:id="@+id/category"
+            android:layout_toEndOf="@id/news_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_standart"
@@ -25,10 +26,11 @@
         <TextView
             android:id="@+id/topic"
             android:layout_below="@id/category"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/margin_standart"
+            android:layout_marginEnd="@dimen/margin_standart"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_toStartOf="@id/news_picture"
+            android:layout_toEndOf="@id/news_picture"
             android:maxLines="2"
             tools:text="@tools:sample/lorem"
             style="@style/TitleStyle" />
@@ -40,18 +42,19 @@
             android:layout_below="@id/topic"
             android:textColor="@color/black"
             android:layout_marginStart="@dimen/margin_standart"
+            android:layout_marginEnd="@dimen/margin_standart"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_toStartOf="@id/news_picture"
+            android:layout_toEndOf="@id/news_picture"
             android:maxLines="3"
-            tools:text="@tools:sample/lorem/random" />
+            tools:text="TEST TEXT" />
 
         <ImageView
             android:id="@+id/news_picture"
             android:layout_width="@dimen/image_item_size"
             android:layout_height="@dimen/image_item_size"
             android:layout_alignTop="@+id/topic"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:scaleType="centerCrop"
             android:layout_marginStart="@dimen/margin_standart"
             android:layout_marginEnd="@dimen/margin_standart"
@@ -65,8 +68,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/preview"
             android:layout_marginStart="@dimen/margin_standart"
+            android:layout_marginEnd="@dimen/margin_standart"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginBottom="@dimen/margin_standart"
+            android:layout_toEndOf="@id/news_picture"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:text="@tools:sample/date/ddmmyy" />

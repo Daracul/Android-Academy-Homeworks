@@ -1,6 +1,7 @@
 package com.daracul.android.secondexercizeapp.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
@@ -11,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+
 public class Utils {
 
     public static int convertDpToPixel(float dp, Context context){
@@ -20,10 +23,6 @@ public class Utils {
         return (int)px;
     }
 
-    public static void loadImageAndSetToView (String url, ImageView imageView, int size){
-        Picasso.get().load(url).
-                resize(size,size).centerCrop().into(imageView);
-    }
 
     public static void loadImageAndSetToView (String url, ImageView imageView){
         Picasso.get().load(url).into(imageView);
@@ -33,4 +32,8 @@ public class Utils {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm 'at' dd.MM.yyyy",Locale.getDefault());
         return sdf.format(date);
     }
+
+    public static boolean isHorizontal (Context context){
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+}
 }

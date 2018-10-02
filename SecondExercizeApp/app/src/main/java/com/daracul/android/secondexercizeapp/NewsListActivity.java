@@ -42,13 +42,14 @@ public class NewsListActivity extends AppCompatActivity {
                 DataUtils.generateNews(),clickListener);
         list.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager;
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if (Utils.isHorizontal(this)){
             layoutManager = new GridLayoutManager(this, 2);
         } else layoutManager = new LinearLayoutManager(this);
         list.addItemDecoration(
                 new VerticalSpaceItemDecoration(Utils.convertDpToPixel(SPACE_BETWEEN_CARDS_IN_DP,
                         this)));
         list.setLayoutManager(layoutManager);
+        list.setHasFixedSize(true);
     }
 
     @Override
