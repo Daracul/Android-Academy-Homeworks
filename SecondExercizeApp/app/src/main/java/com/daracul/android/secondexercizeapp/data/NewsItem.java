@@ -2,6 +2,8 @@ package com.daracul.android.secondexercizeapp.data;
 
 import java.util.Date;
 
+import androidx.annotation.NonNull;
+
 public class NewsItem {
 
     private final String title;
@@ -11,7 +13,8 @@ public class NewsItem {
     private final String previewText;
     private final String fullText;
 
-    public NewsItem(String title, String imageUrl, Category category, Date publishDate, String previewText, String fullText) {
+    public NewsItem(@NonNull String title, @NonNull String imageUrl, @NonNull Category category,
+                    @NonNull Date publishDate, @NonNull String previewText, @NonNull String fullText) {
         this.title = title;
         this.imageUrl = imageUrl;
         this.category = category;

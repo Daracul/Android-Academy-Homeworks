@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
 import com.daracul.android.secondexercizeapp.data.DataUtils;
 import com.daracul.android.secondexercizeapp.data.NewsItem;
 import com.daracul.android.secondexercizeapp.utils.Utils;
@@ -35,22 +33,23 @@ public class NewsDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_detail);
 
-        TextView topicTextView = findViewById(R.id.topic);
-        TextView dateTextView = findViewById(R.id.date);
-        TextView fullTextView = findViewById(R.id.full_text);
-        ImageView pictureImageView = findViewById(R.id.news_picture);
+
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
             int position = getIntent().getExtras().getInt(KEY_FOR_POSITION);
             setupActionBar(position, newsList.get(position).getCategory().getName());
-            fillViews(topicTextView, dateTextView, fullTextView, pictureImageView, position);
+            fillViews(position);
         }
 
     }
 
-    private void fillViews(TextView topicTextView, TextView dateTextView, TextView fullTextView,
-                           ImageView pictureImageView, int position) {
+    private void fillViews(int position) {
+        TextView topicTextView = findViewById(R.id.topic);
+        TextView dateTextView = findViewById(R.id.date);
+        TextView fullTextView = findViewById(R.id.full_text);
+        ImageView pictureImageView = findViewById(R.id.news_picture);
+
         topicTextView.setText(newsList.get(position).getTitle());
         dateTextView.setText(Utils.convertDateToString(newsList.get(position).getPublishDate()));
         fullTextView.setText(newsList.get(position).getFullText());

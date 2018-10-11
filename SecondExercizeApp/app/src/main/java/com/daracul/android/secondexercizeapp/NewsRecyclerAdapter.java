@@ -81,7 +81,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         void onItemClick(int position);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView categoryTextView;
         private final TextView topicTextView;
         private final TextView previewTextView;
