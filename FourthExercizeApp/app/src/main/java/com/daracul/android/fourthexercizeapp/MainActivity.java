@@ -10,13 +10,11 @@ public class MainActivity extends AppCompatActivity {
     private LeftLeg leftLeg;
     private  RightLeg rightLeg;
     Semaphore semaphore;
-    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = findViewById(R.id.text_view);
 
     }
 

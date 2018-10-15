@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder>{
     @NonNull
-    private final List<NewsItem> news;
+    private List<NewsItem> news;
     @NonNull
     private final LayoutInflater inflater;
     @NonNull
@@ -79,6 +79,11 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
 
     public interface OnItemClickListener{
         void onItemClick(int position);
+    }
+
+    public void swapData(List<NewsItem> newsList){
+        this.news = newsList;
+        notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
