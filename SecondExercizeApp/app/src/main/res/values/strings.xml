@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Second Exercize App</string>
+    <string name="app_name">NY Times app</string>
     <string name="about_me">Alexey has been started to learn Java at the end off 2016, before this he never had a development experience. Now he is studying Android development in Android Academy and have made some simple apps.</string>
     <string name="edit_text_hint">Enter a message...</string>
     <string name="send_message_button">send message</string>
@@ -10,4 +10,5 @@
     <string name="toast_text_no_email_clients">There is no installed email clients</string>
     <string name="edit_text_empty_message">The text box is empty</string>
     <string name="disclaimer_text">© 2018 Alexey Malakhov</string>
+    <string name="menu_action_about" translatable="false">About</string>
 </resources>
