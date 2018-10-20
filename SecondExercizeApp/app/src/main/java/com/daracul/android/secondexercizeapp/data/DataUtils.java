@@ -1,5 +1,7 @@
 package com.daracul.android.secondexercizeapp.data;
 
+import com.daracul.android.secondexercizeapp.utils.Utils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -131,7 +133,6 @@ public class DataUtils {
                         + "\"When I first started gigging around the pubs and clubs up North, two songs that were always in my set "
                         + "were Goodnight Girl and Love Is All Around.\""
         ));
-
         return news;
     }
 

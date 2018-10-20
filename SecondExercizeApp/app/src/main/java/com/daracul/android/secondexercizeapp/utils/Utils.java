@@ -36,4 +36,11 @@ public class Utils {
     public static boolean isHorizontal (Context context){
         return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 }
+    public static void imitateWork(int waitInSecs){
+        try {
+            Thread.sleep(waitInSecs*1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
