@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Second Exercize App</string>
+    <string name="app_name">NY Times app</string>
     <string name="edit_text_hint">Введите сообщение ...</string>
     <string name="send_message_button">Отправить</string>
     <string name="first_job_title">IT специалист</string>

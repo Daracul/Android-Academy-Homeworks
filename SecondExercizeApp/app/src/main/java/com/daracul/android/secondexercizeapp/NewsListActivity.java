@@ -2,13 +2,17 @@ package com.daracul.android.secondexercizeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.daracul.android.secondexercizeapp.data.DataUtils;
+import com.daracul.android.secondexercizeapp.data.HomeDTO;
 import com.daracul.android.secondexercizeapp.data.NewsItem;
+import com.daracul.android.secondexercizeapp.data.ResultDTO;
+import com.daracul.android.secondexercizeapp.network.RestApi;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -55,8 +59,7 @@ public class NewsListActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         list = findViewById(R.id.recycler);
-        adapter = new NewsRecyclerAdapter(this,
-                new ArrayList<NewsItem>(), clickListener);
+        adapter = new NewsRecyclerAdapter(this, clickListener);
         loadNews();
         list.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager;
@@ -82,29 +85,57 @@ public class NewsListActivity extends AppCompatActivity {
     public void loadNews() {
         showProgressBar();
 
-        final Disposable disposable = Single.fromCallable(new Callable<List<NewsItem>>() {
-            @Override
-            public List<NewsItem> call() throws Exception {
-                Utils.imitateWork(2);
-                return DataUtils.generateNews();
-            }
-        }).subscribeOn(Schedulers.io())
+//        final Disposable disposable = Single.fromCallable(new Callable<List<NewsItem>>() {
+//            @Override
+//            public List<NewsItem> call() throws Exception {
+//                Utils.imitateWork(2);
+//                return DataUtils.generateNews();
+//            }
+//        }).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<List<NewsItem>>() {
+//                    @Override
+//                    public void accept(List<NewsItem> newsItems) throws Exception {
+//                        hideProgressBar();
+//                        if (newsItems != null) {
+//                            adapter.swapData(newsItems);
+//                        }
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        throwable.printStackTrace();
+//                    }
+//                });
+        final Disposable disposable = RestApi.getInstance()
+                .news()
+                .newsObject("home",RestApi.API_KEY)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<NewsItem>>() {
+                .subscribe(new Consumer<HomeDTO>() {
                     @Override
-                    public void accept(List<NewsItem> newsItems) throws Exception {
+                    public void accept(HomeDTO homeDTO) throws Exception {
+                        doSomething(homeDTO);
+                        adapter.swapData(homeDTO.getResults());
                         hideProgressBar();
-                        if (newsItems != null) {
-                            adapter.swapData(newsItems);
-                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
+                        Log.d("myLogs",throwable.getMessage());
                     }
                 });
         compositeDisposable.add(disposable);
+    }
+
+    private void doSomething(HomeDTO homeDTO) {
+        List<ResultDTO> resultList = homeDTO.getResults();
+        for (ResultDTO result : resultList){
+            Log.d("myLogs",result.getTitle());
+            Log.d("myLogs","images : " +result.getMultimedia().size());
+        }
+
     }
 
 
@@ -137,4 +168,6 @@ public class NewsListActivity extends AppCompatActivity {
         }
 
     }
+
+
 }
