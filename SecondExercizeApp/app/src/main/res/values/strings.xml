@@ -16,4 +16,33 @@
     <string name="btn_try_again">Try again</string>
     <string name="error_network">Network error. Please check your network connection and try again</string>
     <string name="default_category">World</string>
+    <string name="actionbar_spinner">ActionBar Spinner</string>
+    <array name="category_spinner">
+        <item>Home</item>
+        <item>Opinion</item>
+        <item>World</item>
+        <item>National</item>
+        <item>Politics</item>
+        <item>Upshot</item>
+        <item>Nyregion</item>
+        <item>Business</item>
+        <item>Technology</item>
+        <item>Science</item>
+        <item>Health</item>
+        <item>Sports</item>
+        <item>Arts</item>
+        <item>Books</item>
+        <item>Movies</item>
+        <item>Theater</item>
+        <item>Sundayreview</item>
+        <item>Fashion</item>
+        <item>Tmagazine</item>
+        <item>Food</item>
+        <item>Travel</item>
+        <item>Magazine</item>
+        <item>Realestate</item>
+        <item>Automobiles</item>
+        <item>Obituaries</item>
+        <item>Insider</item>
+    </array>
 </resources>

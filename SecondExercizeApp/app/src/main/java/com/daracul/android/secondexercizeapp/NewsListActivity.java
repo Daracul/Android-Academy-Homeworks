@@ -3,10 +3,14 @@ package com.daracul.android.secondexercizeapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import com.daracul.android.secondexercizeapp.data.Category;
 import com.daracul.android.secondexercizeapp.data.ResultDTO;
@@ -21,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +38,7 @@ import retrofit2.Response;
 
 public class NewsListActivity extends AppCompatActivity {
     private static final int SPACE_BETWEEN_CARDS_IN_DP = 4;
-    private static final String CATEGORY_KEY = "category_key";
+    private static final String CATEGORY_SPINNER_KEY = "category_key";
     private static final String LOG_TAG = NewsListActivity.class.getSimpleName();
     private RecyclerView list;
     private NewsRecyclerAdapter adapter;
@@ -42,7 +47,8 @@ public class NewsListActivity extends AppCompatActivity {
     private View viewLoading;
     private View viewNoData;
     private TextView tvError;
-    private TextView tvCategory;
+    private int spinnerPosition ;
+    private Bundle bundle;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private final NewsRecyclerAdapter.OnItemClickListener clickListener =
@@ -58,27 +64,25 @@ public class NewsListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
+        if (savedInstanceState!=null){
+            bundle = savedInstanceState;
+        }
+        Log.d("myLogs", "position is " + spinnerPosition);
         setupUI();
-        if (savedInstanceState != null) {
-            tvCategory.setText(savedInstanceState.getString(CATEGORY_KEY));
-        } else tvCategory.setText(Category.getCategories()[0]);
         setupUX();
-        loadNews(tvCategory.getText().toString().toLowerCase());
+        loadNews(getResources().getStringArray(R.array.category_spinner)
+                [spinnerPosition].toLowerCase());
 
     }
 
 
     private void setupUX() {
-        tvCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createDialog(Category.getCategoryIndexByName(tvCategory.getText().toString()));
-            }
-        });
+
         btnTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadNews(tvCategory.getText().toString().toLowerCase());
+                loadNews(getResources().getStringArray(R.array.category_spinner)
+                        [spinnerPosition].toLowerCase());
             }
         });
     }
@@ -109,7 +113,6 @@ public class NewsListActivity extends AppCompatActivity {
         viewLoading = findViewById(R.id.lt_loading);
         viewNoData = findViewById(R.id.lt_no_data);
         tvError = findViewById(R.id.tv_error);
-        tvCategory = findViewById(R.id.tv_category);
     }
 
     @Override
@@ -234,7 +237,34 @@ public class NewsListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_list, menu);
+        setupSpinner(menu);
         return true;
+    }
+
+    private void setupSpinner(Menu menu) {
+        MenuItem item = menu.findItem(R.id.spinner);
+        Spinner spinner = (Spinner)item.getActionView();
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.category_spinner,R.layout.spinner_item_xml);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        if (bundle!=null){
+            spinner.setSelection(bundle.getInt(CATEGORY_SPINNER_KEY,0));
+        }
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                spinnerPosition = position;
+                loadNews(getResources().getStringArray(R.array.category_spinner)[position].toLowerCase());
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -251,23 +281,7 @@ public class NewsListActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(CATEGORY_KEY, tvCategory.getText().toString());
+        outState.putInt(CATEGORY_SPINNER_KEY, spinnerPosition);
+
     }
-
-    public void createDialog(int checkedItem) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final String[] categories = Category.getCategories();
-        builder.setSingleChoiceItems(categories, checkedItem, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                tvCategory.setText(categories[which]);
-                loadNews(tvCategory.getText().toString().toLowerCase());
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-
 }
