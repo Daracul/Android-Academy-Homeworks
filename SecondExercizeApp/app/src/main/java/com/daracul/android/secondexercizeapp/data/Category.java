@@ -1,23 +1,41 @@
 package com.daracul.android.secondexercizeapp.data;
 
 public class Category {
-    public static final int CATEGORY_ANIMAL = 3;
-    public static final int CATEGORY_CRIMINAL = 1;
-    public static final int CATEGORY_DARWIN = 2;
-    public static final int CATEGORY_MUSIC  = 4;
-    private final int id;
-    private final String name;
+    private static String[] categories = new String[]{"Home",
+            "Opinion",
+            "World",
+            "National",
+            "Politics",
+            "Upshot",
+            "Nyregion",
+            "Business",
+            "Technology",
+            "Science",
+            "Health",
+            "Sports",
+            "Arts",
+            "Books",
+            "Movies",
+            "Theater",
+            "Sundayreview",
+            "Fashion",
+            "Tmagazine",
+            "Food",
+            "Travel",
+            "Magazine",
+            "Realestate",
+            "Automobiles",
+            "Obituaries",
+            "Insider"};
 
-    public Category(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public static String[] getCategories() {
+        return categories;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+    public static int getCategoryIndexByName(String category) {
+        for (int i = 0; i < categories.length; i++) {
+            if (categories[i].equals(category)) return i;
+        }
+        return 0;
     }
 }

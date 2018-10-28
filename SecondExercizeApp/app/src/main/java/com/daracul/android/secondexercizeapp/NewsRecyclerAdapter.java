@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.daracul.android.secondexercizeapp.data.Category;
 import com.daracul.android.secondexercizeapp.data.MultimediaDTO;
-import com.daracul.android.secondexercizeapp.data.NewsItem;
 import com.daracul.android.secondexercizeapp.data.ResultDTO;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 
@@ -19,49 +17,26 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder>{
+public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder> {
     @NonNull
     private List<ResultDTO> news;
     @NonNull
     private final LayoutInflater inflater;
     @NonNull
     private final OnItemClickListener clickListener;
-    private boolean isHorizontal;
 
 
     public NewsRecyclerAdapter(@NonNull Context context,
                                @NonNull OnItemClickListener clickListener) {
         news = new ArrayList<>();
-        this.inflater=LayoutInflater.from(context);
+        this.inflater = LayoutInflater.from(context);
         this.clickListener = clickListener;
-        this.isHorizontal = Utils.isHorizontal(context);
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
-        if (isHorizontal){
-            view = inflater.inflate(R.layout.news_item, parent, false);
-        } else {
-            switch (viewType) {
-                case Category.CATEGORY_CRIMINAL:
-                    view = inflater.inflate(R.layout.news_item, parent, false);
-                    break;
-                case Category.CATEGORY_DARWIN:
-                    view = inflater.inflate(R.layout.news_item2, parent, false);
-                    break;
-                case Category.CATEGORY_ANIMAL:
-                    view = inflater.inflate(R.layout.news_item3, parent, false);
-                    break;
-                case Category.CATEGORY_MUSIC:
-                    view = inflater.inflate(R.layout.news_item4, parent, false);
-                    break;
-                default:
-                    view = inflater.inflate(R.layout.news_item, parent, false);
-                    break;
-            }
-        }
+        View view = inflater.inflate(R.layout.news_item, parent, false);
         return new ViewHolder(view, clickListener);
     }
 
@@ -71,21 +46,17 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
 
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-//        return news.get(position).getCategory().getId();
-//    }
 
     @Override
     public int getItemCount() {
         return news.size();
     }
 
-    public interface OnItemClickListener{
-        void onItemClick(int position);
+    public interface OnItemClickListener {
+        void onItemClick(String url);
     }
 
-    public void swapData(List<ResultDTO> newsList){
+    public void swapData(List<ResultDTO> newsList) {
         this.news = newsList;
         notifyDataSetChanged();
     }
@@ -96,6 +67,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         private final TextView previewTextView;
         private final ImageView pictureView;
         private final TextView dateTextView;
+        private String url;
 
         ViewHolder(@NonNull View itemView, @NonNull final OnItemClickListener clickListener) {
             super(itemView);
@@ -103,9 +75,8 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION){
-                        clickListener.onItemClick(position);
+                    if (url.length() != 0) {
+                        clickListener.onItemClick(url);
                     }
                 }
             });
@@ -117,20 +88,25 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
             dateTextView = itemView.findViewById(R.id.date);
         }
 
-         void bind(ResultDTO newsItem) {
+        void bind(ResultDTO newsItem) {
             categoryTextView.setText(newsItem.getSubsection());
             topicTextView.setText(newsItem.getTitle());
             previewTextView.setText(newsItem.getShortText());
-            dateTextView.setText(newsItem.getPublishedDate());
-            List<MultimediaDTO> multimediaList = newsItem.getMultimedia();
-            if (multimediaList.size()!=0){
-                for (MultimediaDTO multimedia : multimediaList){
-                    if (multimedia.getFormat().equals("thumbLarge")){
-                        Utils.loadImageAndSetToView(multimedia.getUrl(),pictureView);
+            dateTextView.setText(Utils.formatDateFromApi(newsItem.getPublishedDate()));
+            checkAndSetImage(newsItem.getMultimedia());
+            url = newsItem.getUrl();
+
+
+        }
+
+        void checkAndSetImage(List<MultimediaDTO> multimediaList) {
+            if (multimediaList.size() != 0) {
+                for (MultimediaDTO multimedia : multimediaList) {
+                    if (multimedia.getFormat().equals("thumbLarge")) {
+                        Utils.loadImageAndSetToView(multimedia.getUrl(), pictureView);
                     }
                 }
-            }
-
+            } else pictureView.setImageResource(R.drawable.placeholder);
         }
     }
 }

@@ -30,7 +30,6 @@ public class MultimediaDTO {
     }
 
 
-
     public String getType() {
         return type;
     }

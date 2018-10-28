@@ -1,49 +1,55 @@
 package com.daracul.android.secondexercizeapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-
-import com.daracul.android.secondexercizeapp.data.DataUtils;
-import com.daracul.android.secondexercizeapp.data.HomeDTO;
-import com.daracul.android.secondexercizeapp.data.NewsItem;
+import android.widget.Button;
+import android.widget.TextView;
+import com.daracul.android.secondexercizeapp.data.Category;
 import com.daracul.android.secondexercizeapp.data.ResultDTO;
+import com.daracul.android.secondexercizeapp.network.DefaultResponse;
 import com.daracul.android.secondexercizeapp.network.RestApi;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Callable;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class NewsListActivity extends AppCompatActivity {
     private static final int SPACE_BETWEEN_CARDS_IN_DP = 4;
+    private static final String CATEGORY_KEY = "category_key";
     private static final String LOG_TAG = NewsListActivity.class.getSimpleName();
-    private ProgressBar progressBar;
-    RecyclerView list;
-    NewsRecyclerAdapter adapter;
+    private RecyclerView list;
+    private NewsRecyclerAdapter adapter;
+    private Button btnTryAgain;
+    private View viewError;
+    private View viewLoading;
+    private View viewNoData;
+    private TextView tvError;
+    private TextView tvCategory;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private final NewsRecyclerAdapter.OnItemClickListener clickListener =
             new NewsRecyclerAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(int position) {
-                    NewsDetailActivity.start(NewsListActivity.this, position);
+                public void onItemClick(String url) {
+                    NewsDetailActivity.start(NewsListActivity.this, url);
                 }
             };
 
@@ -52,15 +58,39 @@ public class NewsListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
-        progressBar = findViewById(R.id.progress_bar);
+        setupUI();
+        if (savedInstanceState != null) {
+            tvCategory.setText(savedInstanceState.getString(CATEGORY_KEY));
+        } else tvCategory.setText(Category.getCategories()[0]);
+        setupUX();
+        loadNews(tvCategory.getText().toString().toLowerCase());
 
+    }
+
+
+    private void setupUX() {
+        tvCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createDialog(Category.getCategoryIndexByName(tvCategory.getText().toString()));
+            }
+        });
+        btnTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadNews(tvCategory.getText().toString().toLowerCase());
+            }
+        });
+    }
+
+    private void setupUI() {
         setupRecyclerView();
+        findViews();
     }
 
     private void setupRecyclerView() {
         list = findViewById(R.id.recycler);
         adapter = new NewsRecyclerAdapter(this, clickListener);
-        loadNews();
         list.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager;
         if (Utils.isHorizontal(this)) {
@@ -73,6 +103,15 @@ public class NewsListActivity extends AppCompatActivity {
         list.setHasFixedSize(true);
     }
 
+    private void findViews() {
+        btnTryAgain = findViewById(R.id.btn_try_again);
+        viewError = findViewById(R.id.lt_error);
+        viewLoading = findViewById(R.id.lt_loading);
+        viewNoData = findViewById(R.id.lt_no_data);
+        tvError = findViewById(R.id.tv_error);
+        tvCategory = findViewById(R.id.tv_category);
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -82,74 +121,115 @@ public class NewsListActivity extends AppCompatActivity {
 
     }
 
-    public void loadNews() {
-        showProgressBar();
-
-//        final Disposable disposable = Single.fromCallable(new Callable<List<NewsItem>>() {
-//            @Override
-//            public List<NewsItem> call() throws Exception {
-//                Utils.imitateWork(2);
-//                return DataUtils.generateNews();
-//            }
-//        }).subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<List<NewsItem>>() {
-//                    @Override
-//                    public void accept(List<NewsItem> newsItems) throws Exception {
-//                        hideProgressBar();
-//                        if (newsItems != null) {
-//                            adapter.swapData(newsItems);
-//                        }
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        throwable.printStackTrace();
-//                    }
-//                });
+    public void loadNews(String category) {
+        showState(State.Loading);
         final Disposable disposable = RestApi.getInstance()
                 .news()
-                .newsObject("home",RestApi.API_KEY)
+                .newsObject(category)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<HomeDTO>() {
+                .subscribe(new Consumer<Response<DefaultResponse<List<ResultDTO>>>>() {
                     @Override
-                    public void accept(HomeDTO homeDTO) throws Exception {
-                        doSomething(homeDTO);
-                        adapter.swapData(homeDTO.getResults());
-                        hideProgressBar();
+                    public void accept(Response<DefaultResponse<List<ResultDTO>>> response) throws Exception {
+                        checkResponseAndShowState(response);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                        Log.d("myLogs",throwable.getMessage());
+                        handleError(throwable);
                     }
                 });
         compositeDisposable.add(disposable);
     }
 
-    private void doSomething(HomeDTO homeDTO) {
-        List<ResultDTO> resultList = homeDTO.getResults();
-        for (ResultDTO result : resultList){
-            Log.d("myLogs",result.getTitle());
-            Log.d("myLogs","images : " +result.getMultimedia().size());
+    private void handleError(Throwable throwable) {
+        if (throwable instanceof IOException) {
+            showState(State.NetworkError);
+            return;
         }
-
+        showState(State.ServerError);
     }
 
 
-    private void showProgressBar() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
+    private void checkResponseAndShowState(@NonNull Response<DefaultResponse<List<ResultDTO>>> response) {
+
+        if (!response.isSuccessful()) {
+            showState(State.ServerError);
+            return;
+        }
+
+        final DefaultResponse<List<ResultDTO>> body = response.body();
+        if (body == null) {
+            showState(State.HasNoData);
+            return;
+        }
+
+        final List<ResultDTO> data = body.getData();
+        if (data == null) {
+            showState(State.HasNoData);
+            return;
+        }
+
+        if (data.isEmpty()) {
+            showState(State.HasNoData);
+            return;
+        }
+
+        adapter.swapData(data);
+        list.scrollToPosition(0);
+        showState(State.HasData);
+    }
+
+
+    public void showState(@NonNull State state) {
+
+        switch (state) {
+            case HasData:
+                viewError.setVisibility(View.GONE);
+                viewLoading.setVisibility(View.GONE);
+                viewNoData.setVisibility(View.GONE);
+
+                list.setVisibility(View.VISIBLE);
+                break;
+
+            case HasNoData:
+                list.setVisibility(View.GONE);
+                viewLoading.setVisibility(View.GONE);
+
+                viewError.setVisibility(View.VISIBLE);
+                viewNoData.setVisibility(View.VISIBLE);
+                break;
+            case NetworkError:
+                list.setVisibility(View.GONE);
+                viewLoading.setVisibility(View.GONE);
+                viewNoData.setVisibility(View.GONE);
+
+                tvError.setText(getText(R.string.error_network));
+                viewError.setVisibility(View.VISIBLE);
+                break;
+
+            case ServerError:
+                list.setVisibility(View.GONE);
+                viewLoading.setVisibility(View.GONE);
+                viewNoData.setVisibility(View.GONE);
+
+                tvError.setText(getText(R.string.error_server));
+                viewError.setVisibility(View.VISIBLE);
+                break;
+            case Loading:
+                viewError.setVisibility(View.GONE);
+                list.setVisibility(View.GONE);
+                viewNoData.setVisibility(View.GONE);
+
+                viewLoading.setVisibility(View.VISIBLE);
+                break;
+
+
+            default:
+                throw new IllegalArgumentException("Unknown state: " + state);
         }
     }
 
-    private void hideProgressBar() {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -166,7 +246,27 @@ public class NewsListActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(CATEGORY_KEY, tvCategory.getText().toString());
+    }
+
+    public void createDialog(int checkedItem) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final String[] categories = Category.getCategories();
+        builder.setSingleChoiceItems(categories, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                tvCategory.setText(categories[which]);
+                loadNews(tvCategory.getText().toString().toLowerCase());
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

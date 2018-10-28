@@ -1,6 +1,7 @@
 package com.daracul.android.secondexercizeapp.data;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
