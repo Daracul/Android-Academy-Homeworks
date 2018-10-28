@@ -82,13 +82,8 @@ public class NewsListActivity extends AppCompatActivity {
     public void loadNews() {
         showProgressBar();
 
-        final Disposable disposable = Single.fromCallable(new Callable<List<NewsItem>>() {
-            @Override
-            public List<NewsItem> call() throws Exception {
-                Utils.imitateWork(2);
-                return DataUtils.generateNews();
-            }
-        }).subscribeOn(Schedulers.io())
+        final Disposable disposable = DataUtils.observeNews().
+                subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<NewsItem>>() {
                     @Override
