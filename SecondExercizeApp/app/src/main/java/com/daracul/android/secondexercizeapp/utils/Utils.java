@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -36,4 +37,13 @@ public class Utils {
     public static boolean isHorizontal (Context context){
         return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 }
+    public static void imitateWork(int waitInSecs){
+        try {
+            Log.d("myLogs",Thread.currentThread().getName());
+            Thread.sleep(waitInSecs*1000);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

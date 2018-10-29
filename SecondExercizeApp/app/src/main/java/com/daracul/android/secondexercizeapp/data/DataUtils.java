@@ -1,9 +1,17 @@
 package com.daracul.android.secondexercizeapp.data;
 
+import android.util.Log;
+
+import com.daracul.android.secondexercizeapp.utils.Utils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 
 public class DataUtils {
 
@@ -12,6 +20,8 @@ public class DataUtils {
         final Category criminal = new Category(2, "Criminal");
         final Category animals = new Category(3, "Animals");
         final Category music = new Category(4, "Music");
+
+        Utils.imitateWork(2);
 
         List<NewsItem> news = new ArrayList<>();
         news.add(new NewsItem(
@@ -131,8 +141,16 @@ public class DataUtils {
                         + "\"When I first started gigging around the pubs and clubs up North, two songs that were always in my set "
                         + "were Goodnight Girl and Love Is All Around.\""
         ));
-
         return news;
+    }
+
+    public static Observable<List<NewsItem>> observeNews(){
+        return Observable.fromCallable(new Callable<List<NewsItem>>() {
+            @Override
+            public List<NewsItem> call() throws Exception {
+                return generateNews();
+            }
+        });
     }
 
     private static Date createDate(int year, int month, int date, int hrs, int min) {
