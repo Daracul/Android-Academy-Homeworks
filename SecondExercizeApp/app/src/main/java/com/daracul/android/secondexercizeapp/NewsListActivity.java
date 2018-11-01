@@ -118,10 +118,14 @@ public class NewsListActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        compositeDisposable.clear();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if (list != null) list = null;
         if (adapter != null) adapter = null;
-        compositeDisposable.clear();
-
     }
 
     public void loadNews(String category) {
