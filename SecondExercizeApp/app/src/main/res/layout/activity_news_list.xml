@@ -5,12 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+    <FrameLayout
+        android:id="@+id/recycler_screen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".NewsListActivity"
-        tools:listitem="@layout/news_item" />
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".NewsListActivity"
+            tools:listitem="@layout/news_item" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/baseline_autorenew_24"
+            android:layout_margin="16dp" />
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/lt_loading"
@@ -66,5 +80,6 @@
             android:text="@string/btn_try_again" />
 
     </LinearLayout>
+
 
 </LinearLayout>

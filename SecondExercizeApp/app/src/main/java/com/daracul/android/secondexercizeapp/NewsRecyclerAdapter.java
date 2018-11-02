@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.daracul.android.secondexercizeapp.data.MultimediaDTO;
 import com.daracul.android.secondexercizeapp.data.ResultDTO;
+import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapter.ViewHolder> {
     @NonNull
-    private List<ResultDTO> news;
+    private List<News> news;
     @NonNull
     private final LayoutInflater inflater;
     @NonNull
@@ -56,7 +57,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         void onItemClick(String url);
     }
 
-    public void swapData(List<ResultDTO> newsList) {
+    public void swapData(List<News> newsList) {
         this.news = newsList;
         notifyDataSetChanged();
     }
@@ -88,25 +89,18 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
             dateTextView = itemView.findViewById(R.id.date);
         }
 
-        void bind(ResultDTO newsItem) {
-            categoryTextView.setText(newsItem.getSubsection());
+        void bind(News newsItem) {
+            categoryTextView.setText(newsItem.getCategory());
             topicTextView.setText(newsItem.getTitle());
-            previewTextView.setText(newsItem.getShortText());
-            dateTextView.setText(Utils.formatDateFromApi(newsItem.getPublishedDate()));
-            checkAndSetImage(newsItem.getMultimedia());
-            url = newsItem.getUrl();
-
-
-        }
-
-        void checkAndSetImage(List<MultimediaDTO> multimediaList) {
-            if (multimediaList.size() != 0) {
-                for (MultimediaDTO multimedia : multimediaList) {
-                    if (multimedia.getFormat().equals("thumbLarge")) {
-                        Utils.loadImageAndSetToView(multimedia.getUrl(), pictureView);
-                    }
-                }
+            previewTextView.setText(newsItem.getPreviewText());
+            dateTextView.setText(Utils.formatDateFromApi(newsItem.getPublishDate()));
+            String imageUrl = newsItem.getImageUrl();
+            if (!imageUrl.isEmpty()){
+                Utils.loadImageAndSetToView(imageUrl,pictureView);
             } else pictureView.setImageResource(R.drawable.placeholder);
+            url = newsItem.getTextUrl();
+
+
         }
     }
 }

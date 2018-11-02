@@ -2,6 +2,8 @@ package com.daracul.android.secondexercizeapp.data;
 
 import java.util.List;
 
+import com.daracul.android.secondexercizeapp.R;
+import com.daracul.android.secondexercizeapp.utils.Utils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -68,6 +70,17 @@ public class ResultDTO {
 
     public List<MultimediaDTO> getMultimedia() {
         return multimedia;
+    }
+
+    public String checkAndReturnImageUrl() {
+        if (getMultimedia().size() != 0) {
+            for (MultimediaDTO multimedia : getMultimedia()) {
+                if (multimedia.getFormat().equals("thumbLarge")) {
+                    return multimedia.getUrl();
+                }
+            }
+        }
+        return "";
     }
 
 }

@@ -13,13 +13,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.daracul.android.secondexercizeapp.data.Category;
+import com.daracul.android.secondexercizeapp.data.DataConverter;
 import com.daracul.android.secondexercizeapp.data.ResultDTO;
+import com.daracul.android.secondexercizeapp.database.Db;
+import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.network.DefaultResponse;
 import com.daracul.android.secondexercizeapp.network.RestApi;
 import com.daracul.android.secondexercizeapp.utils.Utils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -30,9 +37,11 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
@@ -40,16 +49,18 @@ import retrofit2.Response;
 public class NewsListActivity extends AppCompatActivity {
     private static final int SPACE_BETWEEN_CARDS_IN_DP = 4;
     private static final String CATEGORY_SPINNER_KEY = "category_key";
-    private static final String LOG_TAG = NewsListActivity.class.getSimpleName();
+    private static final String LOG_TAG = "myLogs";
     private RecyclerView list;
     private NewsRecyclerAdapter adapter;
     private Button btnTryAgain;
     private View viewError;
     private View viewLoading;
     private View viewNoData;
+    private View recyclerScreen;
     private TextView tvError;
     private int spinnerPosition ;
     private Bundle bundle;
+    private Db db;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public static void start (Activity activity){
@@ -72,14 +83,17 @@ public class NewsListActivity extends AppCompatActivity {
         if (savedInstanceState!=null){
             bundle = savedInstanceState;
         }
-        Log.d("myLogs", "position is " + spinnerPosition);
         setupUI();
         setupUX();
-        loadNews(getResources().getStringArray(R.array.category_spinner)
-                [spinnerPosition].toLowerCase());
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        db = new Db(getApplicationContext());
+        subcribeToDataFromDb();
+    }
 
     private void setupUX() {
 
@@ -94,7 +108,18 @@ public class NewsListActivity extends AppCompatActivity {
 
     private void setupUI() {
         setupRecyclerView();
+        setupFab();
         findViews();
+    }
+
+    private void setupFab() {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadNews(getCurrentNewsCategory(spinnerPosition));
+            }
+        });
     }
 
 
@@ -119,12 +144,33 @@ public class NewsListActivity extends AppCompatActivity {
         viewLoading = findViewById(R.id.lt_loading);
         viewNoData = findViewById(R.id.lt_no_data);
         tvError = findViewById(R.id.tv_error);
+        recyclerScreen = findViewById(R.id.recycler_screen);
+
+    }
+
+    private void subcribeToDataFromDb(){
+        Disposable disposable = db.getNewsObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<News>>() {
+                    @Override
+                    public void accept(List<News> newsList) throws Exception {
+                        adapter.swapData(newsList);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e(LOG_TAG,throwable.toString());
+                    }
+                });
+        compositeDisposable.add(disposable);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         compositeDisposable.clear();
+        db = null;
     }
 
     @Override
@@ -188,9 +234,23 @@ public class NewsListActivity extends AppCompatActivity {
             return;
         }
 
-        adapter.swapData(data);
-        list.scrollToPosition(0);
-        showState(State.HasData);
+        List<News> newsList = DataConverter.convertDTOListToNewsItem(data);
+        Disposable disposable = db.saveNews(newsList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        list.scrollToPosition(0);
+                        showState(State.HasData);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e(LOG_TAG,throwable.toString());
+                    }
+                });
+        compositeDisposable.add(disposable);
     }
 
 
@@ -202,18 +262,18 @@ public class NewsListActivity extends AppCompatActivity {
                 viewLoading.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
 
-                list.setVisibility(View.VISIBLE);
+                recyclerScreen.setVisibility(View.VISIBLE);
                 break;
 
             case HasNoData:
-                list.setVisibility(View.GONE);
+                recyclerScreen.setVisibility(View.GONE);
                 viewLoading.setVisibility(View.GONE);
 
                 viewError.setVisibility(View.VISIBLE);
                 viewNoData.setVisibility(View.VISIBLE);
                 break;
             case NetworkError:
-                list.setVisibility(View.GONE);
+                recyclerScreen.setVisibility(View.GONE);
                 viewLoading.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
 
@@ -222,7 +282,7 @@ public class NewsListActivity extends AppCompatActivity {
                 break;
 
             case ServerError:
-                list.setVisibility(View.GONE);
+                recyclerScreen.setVisibility(View.GONE);
                 viewLoading.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
 
@@ -231,7 +291,7 @@ public class NewsListActivity extends AppCompatActivity {
                 break;
             case Loading:
                 viewError.setVisibility(View.GONE);
-                list.setVisibility(View.GONE);
+                recyclerScreen.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
 
                 viewLoading.setVisibility(View.VISIBLE);
@@ -266,8 +326,6 @@ public class NewsListActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 spinnerPosition = position;
-                loadNews(getResources().getStringArray(R.array.category_spinner)[position].toLowerCase());
-
             }
 
             @Override
@@ -283,9 +341,32 @@ public class NewsListActivity extends AppCompatActivity {
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
+            case R.id.action_getnews:
+                Disposable disposable = db.getNews()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<List<News>>() {
+                            @Override
+                            public void accept(List<News> newsList) throws Exception {
+                                for (News news : newsList){
+                                    Log.d(LOG_TAG, news.getId() +" : " + news.getTitle());
+                                }
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                throwable.printStackTrace();
+                            }
+                        });
+                compositeDisposable.add(disposable);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private String getCurrentNewsCategory(int spinnerPosition){
+        return getResources().getStringArray(R.array.category_spinner)[spinnerPosition].toLowerCase();
     }
 
     @Override
