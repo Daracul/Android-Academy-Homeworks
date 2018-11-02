@@ -1,5 +1,6 @@
 package com.daracul.android.secondexercizeapp;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,6 +52,11 @@ public class NewsListActivity extends AppCompatActivity {
     private Bundle bundle;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    public static void start (Activity activity){
+        Intent newsListActivity = new Intent(activity, NewsListActivity.class);
+        activity.startActivity(newsListActivity);
+    }
+
     private final NewsRecyclerAdapter.OnItemClickListener clickListener =
             new NewsRecyclerAdapter.OnItemClickListener() {
                 @Override
@@ -58,7 +64,6 @@ public class NewsListActivity extends AppCompatActivity {
                     NewsDetailActivity.start(NewsListActivity.this, url);
                 }
             };
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +96,7 @@ public class NewsListActivity extends AppCompatActivity {
         setupRecyclerView();
         findViews();
     }
+
 
     private void setupRecyclerView() {
         list = findViewById(R.id.recycler);
