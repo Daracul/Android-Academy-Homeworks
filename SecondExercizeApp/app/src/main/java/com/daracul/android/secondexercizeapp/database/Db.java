@@ -2,6 +2,7 @@ package com.daracul.android.secondexercizeapp.database;
 
 import android.content.Context;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -45,8 +46,13 @@ public class Db {
         return AppDataBase.getAppDatabase(context).newsDao().getAllNewsObservable();
     }
 
-    public News getNewsById(int id){
-        return AppDataBase.getAppDatabase(context).newsDao().getNewsById(id);
+    public Single<News> getNewsById(final int id){
+        return Single.fromCallable(new Callable<News>() {
+            @Override
+            public News call() throws Exception {
+                return AppDataBase.getAppDatabase(context).newsDao().getNewsById(id);
+            }
+        });
     }
 
     public void dropAllData(){

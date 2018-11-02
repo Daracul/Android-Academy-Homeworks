@@ -54,7 +54,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
     }
 
     public interface OnItemClickListener {
-        void onItemClick(String url);
+        void onItemClick(int itemId);
     }
 
     public void swapData(List<News> newsList) {
@@ -68,7 +68,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         private final TextView previewTextView;
         private final ImageView pictureView;
         private final TextView dateTextView;
-        private String url;
+        private int id;
 
         ViewHolder(@NonNull View itemView, @NonNull final OnItemClickListener clickListener) {
             super(itemView);
@@ -76,9 +76,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (url.length() != 0) {
-                        clickListener.onItemClick(url);
-                    }
+                    clickListener.onItemClick(id);
                 }
             });
 
@@ -98,9 +96,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
             if (!imageUrl.isEmpty()){
                 Utils.loadImageAndSetToView(imageUrl,pictureView);
             } else pictureView.setImageResource(R.drawable.placeholder);
-            url = newsItem.getTextUrl();
-
-
+            id = newsItem.getId();
         }
     }
 }
