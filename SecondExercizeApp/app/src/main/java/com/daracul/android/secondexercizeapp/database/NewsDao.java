@@ -7,6 +7,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 import io.reactivex.Observable;
 
 @Dao
@@ -26,6 +27,9 @@ public interface NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(News news);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateNews(News news);
 
     @Delete
     void delete(News news);

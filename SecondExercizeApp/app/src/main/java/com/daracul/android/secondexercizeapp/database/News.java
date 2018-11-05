@@ -82,7 +82,6 @@ public class News {
         this.previewText = previewText;
     }
 
-
     public void setTextUrl(String textUrl) {
         this.textUrl = textUrl;
     }

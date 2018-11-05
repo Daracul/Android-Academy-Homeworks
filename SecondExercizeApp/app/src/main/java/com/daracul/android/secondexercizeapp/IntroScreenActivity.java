@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import io.reactivex.Completable;
@@ -27,7 +29,7 @@ public class IntroScreenActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         boolean isLogoShown = initLogoBoolean();
-        if (isLogoShown){
+        if (isLogoShown) {
             saveLogoBoolean(false);
             createSplashScreen();
             waitToShowLogo();
@@ -44,8 +46,8 @@ public class IntroScreenActivity extends AppCompatActivity {
         compositeDisposable.clear();
         finish();
     }
-    
-    private void waitToShowLogo(){
+
+    private void waitToShowLogo() {
         Disposable disposable = Completable
                 .fromCallable(new Callable<Object>() {
                     @Override
@@ -53,7 +55,7 @@ public class IntroScreenActivity extends AppCompatActivity {
                         return null;
                     }
                 })
-                .delay(2,TimeUnit.SECONDS)
+                .delay(2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
@@ -64,14 +66,14 @@ public class IntroScreenActivity extends AppCompatActivity {
         compositeDisposable.add(disposable);
     }
 
-    private void createSplashScreen(){
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    private void createSplashScreen() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.nyt_logo);
+        imageView.setImageResource(R.drawable.nyt_logo_small);
         imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -79,15 +81,15 @@ public class IntroScreenActivity extends AppCompatActivity {
         setContentView(linearLayout);
     }
 
-    private void saveLogoBoolean(Boolean showLogo){
+    private void saveLogoBoolean(Boolean showLogo) {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(SHARED_PREF_KEY,showLogo);
+        editor.putBoolean(SHARED_PREF_KEY, showLogo);
         editor.apply();
     }
 
-    private boolean initLogoBoolean(){
+    private boolean initLogoBoolean() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        return sharedPreferences.getBoolean(SHARED_PREF_KEY,true);
+        return sharedPreferences.getBoolean(SHARED_PREF_KEY, true);
     }
 }

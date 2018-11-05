@@ -14,12 +14,9 @@ public final class RestApi {
 
     private static final String URL = "https://api.nytimes.com/svc/topstories/v2/";
     public static final String API_KEY = "a1a6c2e7986e4279a9b01de45e7f19db";
-
     private static final int TIMEOUT_IN_SECONDS = 2;
     private static RestApi sRestApi;
-
     private final NewsEndpoint newsEndpoint;
-
 
     public static synchronized RestApi getInstance() {
         if (sRestApi == null) {
@@ -51,7 +48,6 @@ public final class RestApi {
     private OkHttpClient buildOkHttpClient() {
         final HttpLoggingInterceptor networkLogInterceptor = new HttpLoggingInterceptor();
         networkLogInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-
 
         return new OkHttpClient.Builder()
                 .addInterceptor(ApiKeyInterceptor.create(API_KEY))

@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.functions.Action;
 
 public class Db {
 
@@ -51,6 +52,24 @@ public class Db {
             @Override
             public News call() throws Exception {
                 return AppDataBase.getAppDatabase(context).newsDao().getNewsById(id);
+            }
+        });
+    }
+
+    public Completable updateNews(final News news){
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                AppDataBase.getAppDatabase(context).newsDao().updateNews(news);
+            }
+        });
+    }
+
+    public Completable deleteNews(final News news){
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                AppDataBase.getAppDatabase(context).newsDao().delete(news);
             }
         });
     }

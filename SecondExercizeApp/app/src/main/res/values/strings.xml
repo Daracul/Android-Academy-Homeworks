@@ -17,6 +17,9 @@
     <string name="error_network">Network error. Please check your network connection and try again</string>
     <string name="default_category">World</string>
     <string name="actionbar_spinner">ActionBar Spinner</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
     <array name="category_spinner">
         <item>Home</item>
         <item>Opinion</item>

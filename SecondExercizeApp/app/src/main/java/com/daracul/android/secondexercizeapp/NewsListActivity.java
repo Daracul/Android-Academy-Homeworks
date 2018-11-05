@@ -58,12 +58,12 @@ public class NewsListActivity extends AppCompatActivity {
     private View viewNoData;
     private View recyclerScreen;
     private TextView tvError;
-    private int spinnerPosition ;
+    private int spinnerPosition;
     private Bundle bundle;
     private Db db;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public static void start (Activity activity){
+    public static void start(Activity activity) {
         Intent newsListActivity = new Intent(activity, NewsListActivity.class);
         activity.startActivity(newsListActivity);
     }
@@ -72,7 +72,7 @@ public class NewsListActivity extends AppCompatActivity {
             new NewsRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int id) {
-                    NewsDetailActivity.start(NewsListActivity.this,id);
+                    NewsDetailActivity.start(NewsListActivity.this, id);
                 }
             };
 
@@ -80,7 +80,7 @@ public class NewsListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
-        if (savedInstanceState!=null){
+        if (savedInstanceState != null) {
             bundle = savedInstanceState;
         }
         setupUI();
@@ -96,7 +96,6 @@ public class NewsListActivity extends AppCompatActivity {
     }
 
     private void setupUX() {
-
         btnTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +147,7 @@ public class NewsListActivity extends AppCompatActivity {
 
     }
 
-    private void subcribeToDataFromDb(){
+    private void subcribeToDataFromDb() {
         Disposable disposable = db.getNewsObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -160,7 +159,7 @@ public class NewsListActivity extends AppCompatActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.e(LOG_TAG,throwable.toString());
+                        Log.e(LOG_TAG, throwable.toString());
                     }
                 });
         compositeDisposable.add(disposable);
@@ -247,7 +246,7 @@ public class NewsListActivity extends AppCompatActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.e(LOG_TAG,throwable.toString());
+                        Log.e(LOG_TAG, throwable.toString());
                     }
                 });
         compositeDisposable.add(disposable);
@@ -255,20 +254,16 @@ public class NewsListActivity extends AppCompatActivity {
 
 
     public void showState(@NonNull State state) {
-
         switch (state) {
             case HasData:
                 viewError.setVisibility(View.GONE);
                 viewLoading.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
-
                 recyclerScreen.setVisibility(View.VISIBLE);
                 break;
-
             case HasNoData:
                 recyclerScreen.setVisibility(View.GONE);
                 viewLoading.setVisibility(View.GONE);
-
                 viewError.setVisibility(View.VISIBLE);
                 viewNoData.setVisibility(View.VISIBLE);
                 break;
@@ -276,16 +271,13 @@ public class NewsListActivity extends AppCompatActivity {
                 recyclerScreen.setVisibility(View.GONE);
                 viewLoading.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
-
                 tvError.setText(getText(R.string.error_network));
                 viewError.setVisibility(View.VISIBLE);
                 break;
-
             case ServerError:
                 recyclerScreen.setVisibility(View.GONE);
                 viewLoading.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
-
                 tvError.setText(getText(R.string.error_server));
                 viewError.setVisibility(View.VISIBLE);
                 break;
@@ -293,11 +285,8 @@ public class NewsListActivity extends AppCompatActivity {
                 viewError.setVisibility(View.GONE);
                 recyclerScreen.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
-
                 viewLoading.setVisibility(View.VISIBLE);
                 break;
-
-
             default:
                 throw new IllegalArgumentException("Unknown state: " + state);
         }
@@ -313,14 +302,13 @@ public class NewsListActivity extends AppCompatActivity {
 
     private void setupSpinner(Menu menu) {
         MenuItem item = menu.findItem(R.id.spinner);
-        Spinner spinner = (Spinner)item.getActionView();
-
+        Spinner spinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.category_spinner,R.layout.spinner_item_xml);
+                R.array.category_spinner, R.layout.spinner_item_xml);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        if (bundle!=null){
-            spinner.setSelection(bundle.getInt(CATEGORY_SPINNER_KEY,0));
+        if (bundle != null) {
+            spinner.setSelection(bundle.getInt(CATEGORY_SPINNER_KEY, 0));
         }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -330,7 +318,6 @@ public class NewsListActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
@@ -341,31 +328,12 @@ public class NewsListActivity extends AppCompatActivity {
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
-            case R.id.action_getnews:
-                Disposable disposable = db.getNews()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<List<News>>() {
-                            @Override
-                            public void accept(List<News> newsList) throws Exception {
-                                for (News news : newsList){
-                                    Log.d(LOG_TAG, news.getId() +" : " + news.getTitle());
-                                }
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                throwable.printStackTrace();
-                            }
-                        });
-                compositeDisposable.add(disposable);
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private String getCurrentNewsCategory(int spinnerPosition){
+    private String getCurrentNewsCategory(int spinnerPosition) {
         return getResources().getStringArray(R.array.category_spinner)[spinnerPosition].toLowerCase();
     }
 

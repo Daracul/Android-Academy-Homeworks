@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <EditText
             android:id="@+id/topic"
             style="@style/TitleStyle"
             android:layout_width="match_parent"
@@ -27,15 +27,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_standart"
-            android:layout_marginTop="@dimen/margin_half_standart"
             tools:text="@tools:sample/date/ddmmyy" />
 
-        <TextView
+        <EditText
             android:id="@+id/full_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_standart"
-            android:layout_marginTop="@dimen/margin_half_standart"
             android:layout_marginEnd="@dimen/margin_standart"
             android:layout_marginBottom="@dimen/margin_standart"
             android:textColor="@color/black" />
