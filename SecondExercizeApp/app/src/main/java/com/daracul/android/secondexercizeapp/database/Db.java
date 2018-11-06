@@ -13,17 +13,17 @@ import io.reactivex.functions.Action;
 
 public class Db {
 
-    private final Context context;
+
+    private AppDataBase dataBase;
 
     public Db(Context context) {
-        this.context = context;
+        dataBase = AppDataBase.getAppDatabase(context);
     }
 
     public Completable saveNews(final List<News> newsList){
         return Completable.fromCallable(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                AppDataBase dataBase = AppDataBase.getAppDatabase(context);
                 dataBase.newsDao().deleteAll();
 
                 News[] news = newsList.toArray(new News[newsList.size()]);
@@ -38,20 +38,20 @@ public class Db {
         return Single.fromCallable(new Callable<List<News>>() {
             @Override
             public List<News> call() throws Exception {
-                return AppDataBase.getAppDatabase(context).newsDao().getAllNews();
+                return dataBase.newsDao().getAllNews();
             }
         });
     }
 
     public Observable<List<News>> getNewsObservable(){
-        return AppDataBase.getAppDatabase(context).newsDao().getAllNewsObservable();
+        return dataBase.newsDao().getAllNewsObservable();
     }
 
     public Single<News> getNewsById(final int id){
         return Single.fromCallable(new Callable<News>() {
             @Override
             public News call() throws Exception {
-                return AppDataBase.getAppDatabase(context).newsDao().getNewsById(id);
+                return dataBase.newsDao().getNewsById(id);
             }
         });
     }
@@ -60,7 +60,7 @@ public class Db {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
-                AppDataBase.getAppDatabase(context).newsDao().updateNews(news);
+                dataBase.newsDao().updateNews(news);
             }
         });
     }
@@ -69,12 +69,12 @@ public class Db {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
-                AppDataBase.getAppDatabase(context).newsDao().delete(news);
+                dataBase.newsDao().delete(news);
             }
         });
     }
 
     public void dropAllData(){
-        AppDataBase.getAppDatabase(context).newsDao().deleteAll();
+        dataBase.newsDao().deleteAll();
     }
 }
