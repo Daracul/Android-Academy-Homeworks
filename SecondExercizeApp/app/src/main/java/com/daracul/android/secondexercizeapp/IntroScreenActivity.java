@@ -3,27 +3,30 @@ package com.daracul.android.secondexercizeapp;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
+import me.relex.circleindicator.CircleIndicator;
 
 public class IntroScreenActivity extends AppCompatActivity {
     private static final String SHARED_PREF = "INTRO_SHARED_PREF";
     private static final String SHARED_PREF_KEY = "KEY_SHARED_PREF";
-
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,8 +34,14 @@ public class IntroScreenActivity extends AppCompatActivity {
         boolean isLogoShown = initLogoBoolean();
         if (isLogoShown) {
             saveLogoBoolean(false);
-            createSplashScreen();
-            waitToShowLogo();
+            setContentView(R.layout.activity_intro);
+            findViewById(R.id.tv_welcome).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NewsListActivity.start(IntroScreenActivity.this);
+                }
+            });
+            setupViewPager();
         } else {
             saveLogoBoolean(true);
             NewsListActivity.start(this);
@@ -40,45 +49,26 @@ public class IntroScreenActivity extends AppCompatActivity {
 
     }
 
+    private void setupViewPager() {
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        IntroPageAdapter pageAdapter = new IntroPageAdapter(getSupportFragmentManager(),createImageIdList());
+        CircleIndicator indicator = findViewById(R.id.indicator);
+        viewPager.setAdapter(pageAdapter);
+        indicator.setViewPager(viewPager);
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
-        compositeDisposable.clear();
         finish();
     }
 
-    private void waitToShowLogo() {
-        Disposable disposable = Completable
-                .fromCallable(new Callable<Object>() {
-                    @Override
-                    public Object call() throws Exception {
-                        return null;
-                    }
-                })
-                .delay(2, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        NewsListActivity.start(IntroScreenActivity.this);
-                    }
-                });
-        compositeDisposable.add(disposable);
-    }
-
-    private void createSplashScreen() {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(R.drawable.nyt_logo_small);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        linearLayout.addView(imageView);
-        setContentView(linearLayout);
+    private List<Integer> createImageIdList(){
+        List<Integer> imageIdList = new ArrayList<>() ;
+        imageIdList.add(R.drawable.image1);
+        imageIdList.add(R.drawable.image2);
+        imageIdList.add(R.drawable.image3);
+        return imageIdList;
     }
 
     private void saveLogoBoolean(Boolean showLogo) {

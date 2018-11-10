@@ -20,6 +20,7 @@
     <string name="edit">Edit</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="welcome_screen">Welcome!</string>
     <array name="category_spinner">
         <item>Home</item>
         <item>Opinion</item>
