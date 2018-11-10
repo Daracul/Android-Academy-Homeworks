@@ -1,27 +1,18 @@
-package com.daracul.android.secondexercizeapp;
+package com.daracul.android.secondexercizeapp.ui.intro;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+
+import com.daracul.android.secondexercizeapp.R;
+import com.daracul.android.secondexercizeapp.ui.list.NewsListActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import me.relex.circleindicator.CircleIndicator;
 
 public class IntroScreenActivity extends AppCompatActivity {

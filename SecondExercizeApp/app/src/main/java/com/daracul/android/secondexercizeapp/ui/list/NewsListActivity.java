@@ -1,7 +1,6 @@
-package com.daracul.android.secondexercizeapp;
+package com.daracul.android.secondexercizeapp.ui.list;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,31 +12,30 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.daracul.android.secondexercizeapp.data.Category;
-import com.daracul.android.secondexercizeapp.data.DataConverter;
-import com.daracul.android.secondexercizeapp.data.ResultDTO;
+import com.daracul.android.secondexercizeapp.R;
+import com.daracul.android.secondexercizeapp.model.DataConverter;
+import com.daracul.android.secondexercizeapp.model.ResultDTO;
 import com.daracul.android.secondexercizeapp.database.Db;
 import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.network.DefaultResponse;
 import com.daracul.android.secondexercizeapp.network.RestApi;
+import com.daracul.android.secondexercizeapp.ui.about.AboutActivity;
+import com.daracul.android.secondexercizeapp.ui.detail.NewsDetailActivity;
+import com.daracul.android.secondexercizeapp.utils.State;
 import com.daracul.android.secondexercizeapp.utils.Utils;
+import com.daracul.android.secondexercizeapp.utils.VerticalSpaceItemDecoration;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;

@@ -2,7 +2,7 @@ package com.daracul.android.secondexercizeapp.network;
 
 import android.support.annotation.NonNull;
 
-import com.daracul.android.secondexercizeapp.data.ResultDTO;
+import com.daracul.android.secondexercizeapp.model.ResultDTO;
 
 import java.util.List;
 

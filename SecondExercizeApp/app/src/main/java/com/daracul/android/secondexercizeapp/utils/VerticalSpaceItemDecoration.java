@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp;
+package com.daracul.android.secondexercizeapp.utils;
 
 import android.graphics.Rect;
 import android.view.View;

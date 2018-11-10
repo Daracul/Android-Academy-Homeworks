@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.data;
+package com.daracul.android.secondexercizeapp.model;
 
 import com.daracul.android.secondexercizeapp.database.News;
 

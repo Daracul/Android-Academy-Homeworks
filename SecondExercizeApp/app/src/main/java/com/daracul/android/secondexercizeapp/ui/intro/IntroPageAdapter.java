@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp;
+package com.daracul.android.secondexercizeapp.ui.intro;
 
 import java.util.List;
 

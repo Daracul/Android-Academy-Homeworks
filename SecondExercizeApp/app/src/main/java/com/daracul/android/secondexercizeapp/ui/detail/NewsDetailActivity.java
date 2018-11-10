@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp;
+package com.daracul.android.secondexercizeapp.ui.detail;
 
 
 import android.app.Activity;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daracul.android.secondexercizeapp.R;
 import com.daracul.android.secondexercizeapp.database.Db;
 import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.utils.Utils;

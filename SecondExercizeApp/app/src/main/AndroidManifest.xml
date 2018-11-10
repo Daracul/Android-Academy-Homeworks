@@ -13,11 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NewsListActivity">
+        <activity android:name=".ui.list.NewsListActivity">
 
         </activity>
         <activity
-            android:name=".IntroScreenActivity"
+            android:name=".ui.intro.IntroScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,10 +26,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewsDetailActivity"
-            android:parentActivityName=".NewsListActivity"
+            android:name=".ui.detail.NewsDetailActivity"
+            android:parentActivityName=".ui.list.NewsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AboutActivity" />
+        <activity android:name=".ui.about.AboutActivity" />
     </application>
 
 </manifest>

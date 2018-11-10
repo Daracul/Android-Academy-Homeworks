@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp;
+package com.daracul.android.secondexercizeapp.ui.about;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.daracul.android.secondexercizeapp.R;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;

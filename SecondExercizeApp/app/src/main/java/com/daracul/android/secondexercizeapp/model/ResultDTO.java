@@ -1,9 +1,7 @@
-package com.daracul.android.secondexercizeapp.data;
+package com.daracul.android.secondexercizeapp.model;
 
 import java.util.List;
 
-import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.utils.Utils;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

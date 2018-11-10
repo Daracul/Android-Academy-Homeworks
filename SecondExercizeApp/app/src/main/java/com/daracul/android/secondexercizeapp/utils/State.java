@@ -1,6 +1,6 @@
-package com.daracul.android.secondexercizeapp;
+package com.daracul.android.secondexercizeapp.utils;
 
-enum State {
+public enum State {
     HasData,
     HasNoData,
     Loading,

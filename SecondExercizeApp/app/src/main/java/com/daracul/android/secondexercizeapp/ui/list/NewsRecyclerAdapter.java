@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp;
+package com.daracul.android.secondexercizeapp.ui.list;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,8 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.daracul.android.secondexercizeapp.data.MultimediaDTO;
-import com.daracul.android.secondexercizeapp.data.ResultDTO;
+import com.daracul.android.secondexercizeapp.R;
 import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 

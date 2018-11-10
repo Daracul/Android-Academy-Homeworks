@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.data;
+package com.daracul.android.secondexercizeapp.model;
 
 public class Category {
     private static String[] categories = new String[]{"Home",
