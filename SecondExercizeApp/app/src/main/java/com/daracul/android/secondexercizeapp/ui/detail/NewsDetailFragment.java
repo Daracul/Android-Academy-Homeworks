@@ -1,13 +1,14 @@
 package com.daracul.android.secondexercizeapp.ui.detail;
 
-
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,19 +17,20 @@ import com.daracul.android.secondexercizeapp.R;
 import com.daracul.android.secondexercizeapp.database.Db;
 import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.utils.Utils;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class NewsDetailActivity extends AppCompatActivity {
+public class NewsDetailFragment extends Fragment {
     private static final String KEY_FOR_POSITION = "position_key";
     private static final String LOG_TAG = "myLogs";
     private EditText topicTextView;
@@ -38,33 +40,44 @@ public class NewsDetailActivity extends AppCompatActivity {
     private Db db;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public static void start(Activity activity, int position) {
-        Intent detailActivity = new Intent(activity, NewsDetailActivity.class);
-        detailActivity.putExtra(NewsDetailActivity.KEY_FOR_POSITION, position);
-        activity.startActivity(detailActivity);
+
+    public static NewsDetailFragment newInstance(int position){
+        NewsDetailFragment newsDetailFragment = new NewsDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(KEY_FOR_POSITION, position);
+        newsDetailFragment.setArguments(bundle);
+        return newsDetailFragment;
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news_detail);
-        db = new Db(getApplicationContext());
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            int position = getIntent().getExtras().getInt(KEY_FOR_POSITION);
+}
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.content_scrolling, container, false);
+        setHasOptionsMenu(true);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getActivity()!=null){
+            int position = getArguments().getInt(KEY_FOR_POSITION);
+            db = new Db(getActivity().getApplicationContext());
             loadDataFromDb(position);
         }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_detail, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_detail, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -87,7 +100,7 @@ public class NewsDetailActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         compositeDisposable.clear();
     }
@@ -110,9 +123,14 @@ public class NewsDetailActivity extends AppCompatActivity {
             Disposable disposable = db.deleteNews(news)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe();
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action() {
+                        @Override
+                        public void run() throws Exception {
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    });
             compositeDisposable.add(disposable);
-            finish();
         }
     }
 
@@ -137,32 +155,31 @@ public class NewsDetailActivity extends AppCompatActivity {
 
     private void fillViews(News news) {
         this.news = news;
-        topicTextView = findViewById(R.id.topic);
-        originalDrawable = topicTextView.getBackground();
-        TextView dateTextView = findViewById(R.id.date);
-        fullTextView = findViewById(R.id.full_text);
-        makeLookLikeTextView(topicTextView);
-        makeLookLikeTextView(fullTextView);
-        ImageView pictureImageView = findViewById(R.id.news_picture);
+        View view = getView();
+        if (view!=null) {
+            topicTextView = view.findViewById(R.id.topic);
+            originalDrawable = topicTextView.getBackground();
+            TextView dateTextView = view.findViewById(R.id.date);
+            fullTextView = view.findViewById(R.id.full_text);
+            makeLookLikeTextView(topicTextView);
+            makeLookLikeTextView(fullTextView);
+            ImageView pictureImageView = view.findViewById(R.id.news_picture);
 
-        topicTextView.setText(news.getTitle());
-        dateTextView.setText(Utils.formatDateFromApi(news.getPublishDate()));
-        fullTextView.setText(news.getPreviewText());
-        if (!news.getImageUrl().isEmpty()){
-            Utils.loadImageAndSetToView(news.getImageUrl(), pictureImageView);
-        } else pictureImageView.setImageResource(R.drawable.placeholder);
-        setupActionBar(news.getCategory());
+            topicTextView.setText(news.getTitle());
+            dateTextView.setText(Utils.formatDateFromApi(news.getPublishDate()));
+            fullTextView.setText(news.getPreviewText());
+            if (!news.getImageUrl().isEmpty()) {
+                Utils.loadImageAndSetToView(news.getImageUrl(), pictureImageView);
+            } else pictureImageView.setImageResource(R.drawable.placeholder);
+            setupActionBar(news.getCategory(),view);
+        }
     }
 
-    private void setupActionBar(String title) {
-
-        CollapsingToolbarLayout toolbarLayout = findViewById(R.id.collapsing_toolbar);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (toolbarLayout != null && actionBar != null) {
+    private void setupActionBar(String title, View view) {
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            toolbarLayout.setTitle(title);
+            actionBar.setTitle(title);
         }
     }
 
@@ -178,11 +195,5 @@ public class NewsDetailActivity extends AppCompatActivity {
         editText.setFocusableInTouchMode(true);
         editText.setLongClickable(true);
         editText.setBackground(original);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }

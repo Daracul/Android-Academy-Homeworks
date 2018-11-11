@@ -13,9 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.list.ListActivity">
-
-        </activity>
+        <activity android:name=".ui.list.MainActivity" />
         <activity
             android:name=".ui.intro.IntroScreenActivity"
             android:screenOrientation="portrait"
@@ -25,10 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.detail.NewsDetailActivity"
-            android:parentActivityName=".ui.list.ListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.about.AboutActivity" />
     </application>
 

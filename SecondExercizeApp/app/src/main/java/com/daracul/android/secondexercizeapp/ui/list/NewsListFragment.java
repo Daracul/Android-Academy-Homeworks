@@ -1,6 +1,6 @@
 package com.daracul.android.secondexercizeapp.ui.list;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +24,7 @@ import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.network.DefaultResponse;
 import com.daracul.android.secondexercizeapp.network.RestApi;
 import com.daracul.android.secondexercizeapp.ui.about.AboutActivity;
-import com.daracul.android.secondexercizeapp.ui.detail.NewsDetailActivity;
+import com.daracul.android.secondexercizeapp.ui.detail.NewsDetailFragment;
 import com.daracul.android.secondexercizeapp.utils.State;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 import com.daracul.android.secondexercizeapp.utils.VerticalSpaceItemDecoration;
@@ -62,21 +62,29 @@ public class NewsListFragment extends Fragment {
     private int spinnerPosition;
     private Bundle bundle;
     private Db db;
+    private DetailFragmentListener detailFragmentListener;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    public interface DetailFragmentListener{
+        void openDetailFragment(int id);
+    }
 
     private final NewsRecyclerAdapter.OnItemClickListener clickListener =
             new NewsRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int id) {
-                    NewsDetailActivity.start(getActivity(), id);
+                    if (detailFragmentListener!=null){
+                        detailFragmentListener.openDetailFragment(id);
+                    }
                 }
             };
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (getActivity() instanceof DetailFragmentListener){
+            detailFragmentListener = (DetailFragmentListener)getActivity();
+        }
     }
 
     @Nullable
@@ -85,12 +93,14 @@ public class NewsListFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            bundle = savedInstanceState;
+            this.bundle = savedInstanceState;
+
         }
+        Log.d(LOG_TAG,"onCreateView");
         View view = inflater.inflate(R.layout.fragment_news_list,container,false);
+        setHasOptionsMenu(true);
         setupUI(view);
         setupUX();
-
         return view;
     }
 
@@ -100,6 +110,7 @@ public class NewsListFragment extends Fragment {
         if (getActivity()!=null){
             db = new Db(getActivity().getApplicationContext());
             subcribeToDataFromDb();
+            Log.d(LOG_TAG,"onStart");
         }
     }
 
@@ -178,6 +189,12 @@ public class NewsListFragment extends Fragment {
         super.onStop();
         compositeDisposable.clear();
         db = null;
+    }
+
+    @Override
+    public void onDetach() {
+        detailFragmentListener = null;
+        super.onDetach();
     }
 
     @Override
@@ -303,6 +320,8 @@ public class NewsListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_list, menu);
+        Log.d(LOG_TAG,"Creating menu");
         setupSpinner(menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -314,7 +333,9 @@ public class NewsListFragment extends Fragment {
                 R.array.category_spinner, R.layout.spinner_item_xml);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
         if (bundle != null) {
+            Log.d(LOG_TAG,"restoring from bundle in setupspinner spinner position: "+bundle.getInt(CATEGORY_SPINNER_KEY));
             spinner.setSelection(bundle.getInt(CATEGORY_SPINNER_KEY, 0));
         }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -348,6 +369,8 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(LOG_TAG,"Saving spinner numb");
         outState.putInt(CATEGORY_SPINNER_KEY, spinnerPosition);
+
     }
 }

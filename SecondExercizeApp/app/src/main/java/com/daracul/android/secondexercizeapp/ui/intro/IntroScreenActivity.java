@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.ui.list.ListActivity;
-import com.daracul.android.secondexercizeapp.ui.list.NewsListFragment;
+import com.daracul.android.secondexercizeapp.ui.list.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +29,13 @@ public class IntroScreenActivity extends AppCompatActivity {
             findViewById(R.id.tv_welcome).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ListActivity.start(IntroScreenActivity.this);
+                    MainActivity.start(IntroScreenActivity.this);
                 }
             });
             setupViewPager();
         } else {
             saveLogoBoolean(true);
-            ListActivity.start(this);
+            MainActivity.start(this);
         }
 
     }
