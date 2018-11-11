@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,7 +35,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,7 +47,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
-public class NewsListActivity extends AppCompatActivity {
+public class NewsListFragment extends Fragment {
     private static final int SPACE_BETWEEN_CARDS_IN_DP = 4;
     private static final String CATEGORY_SPINNER_KEY = "category_key";
     private static final String LOG_TAG = "myLogs";
@@ -61,36 +64,43 @@ public class NewsListActivity extends AppCompatActivity {
     private Db db;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public static void start(Activity activity) {
-        Intent newsListActivity = new Intent(activity, NewsListActivity.class);
-        activity.startActivity(newsListActivity);
-    }
-
     private final NewsRecyclerAdapter.OnItemClickListener clickListener =
             new NewsRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int id) {
-                    NewsDetailActivity.start(NewsListActivity.this, id);
+                    NewsDetailActivity.start(getActivity(), id);
                 }
             };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news_list);
-        if (savedInstanceState != null) {
-            bundle = savedInstanceState;
-        }
-        setupUI();
-        setupUX();
+        setHasOptionsMenu(true);
 
     }
 
+    @Nullable
     @Override
-    protected void onStart() {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            bundle = savedInstanceState;
+        }
+        View view = inflater.inflate(R.layout.fragment_news_list,container,false);
+        setupUI(view);
+        setupUX();
+
+        return view;
+    }
+
+    @Override
+    public void onStart() {
         super.onStart();
-        db = new Db(getApplicationContext());
-        subcribeToDataFromDb();
+        if (getActivity()!=null){
+            db = new Db(getActivity().getApplicationContext());
+            subcribeToDataFromDb();
+        }
     }
 
     private void setupUX() {
@@ -103,45 +113,45 @@ public class NewsListActivity extends AppCompatActivity {
         });
     }
 
-    private void setupUI() {
-        setupRecyclerView();
-        setupFab();
-        findViews();
+    private void setupUI(View view) {
+        setupRecyclerView(view);
+        setupFab(view);
+        findViews(view);
     }
 
-    private void setupFab() {
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadNews(getCurrentNewsCategory(spinnerPosition));
-            }
-        });
+    private void setupFab(View view) {
+            FloatingActionButton fab = view.findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    loadNews(getCurrentNewsCategory(spinnerPosition));
+                }
+            });
     }
 
 
-    private void setupRecyclerView() {
-        list = findViewById(R.id.recycler);
-        adapter = new NewsRecyclerAdapter(this, clickListener);
+    private void setupRecyclerView(View view) {
+        list = view.findViewById(R.id.recycler);
+        adapter = new NewsRecyclerAdapter(view.getContext(), clickListener);
         list.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager;
-        if (Utils.isHorizontal(this)) {
-            layoutManager = new GridLayoutManager(this, 2);
-        } else layoutManager = new LinearLayoutManager(this);
+        if (Utils.isHorizontal(view.getContext())) {
+            layoutManager = new GridLayoutManager(view.getContext(), 2);
+        } else layoutManager = new LinearLayoutManager(view.getContext());
         list.addItemDecoration(
                 new VerticalSpaceItemDecoration(Utils.convertDpToPixel(SPACE_BETWEEN_CARDS_IN_DP,
-                        this)));
+                        view.getContext())));
         list.setLayoutManager(layoutManager);
         list.setHasFixedSize(true);
     }
 
-    private void findViews() {
-        btnTryAgain = findViewById(R.id.btn_try_again);
-        viewError = findViewById(R.id.lt_error);
-        viewLoading = findViewById(R.id.lt_loading);
-        viewNoData = findViewById(R.id.lt_no_data);
-        tvError = findViewById(R.id.tv_error);
-        recyclerScreen = findViewById(R.id.recycler_screen);
+    private void findViews(View view) {
+        btnTryAgain = view.findViewById(R.id.btn_try_again);
+        viewError = view.findViewById(R.id.lt_error);
+        viewLoading = view.findViewById(R.id.lt_loading);
+        viewNoData = view.findViewById(R.id.lt_no_data);
+        tvError = view.findViewById(R.id.tv_error);
+        recyclerScreen = view.findViewById(R.id.recycler_screen);
 
     }
 
@@ -164,20 +174,20 @@ public class NewsListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         compositeDisposable.clear();
         db = null;
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (list != null) list = null;
         if (adapter != null) adapter = null;
     }
 
-    public void loadNews(String category) {
+    private void loadNews(String category) {
         showState(State.Loading);
         final Disposable disposable = RestApi.getInstance()
                 .news()
@@ -251,7 +261,7 @@ public class NewsListActivity extends AppCompatActivity {
     }
 
 
-    public void showState(@NonNull State state) {
+    private void showState(@NonNull State state) {
         switch (state) {
             case HasData:
                 viewError.setVisibility(View.GONE);
@@ -292,16 +302,15 @@ public class NewsListActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_list, menu);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         setupSpinner(menu);
-        return true;
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void setupSpinner(Menu menu) {
         MenuItem item = menu.findItem(R.id.spinner);
         Spinner spinner = (Spinner) item.getActionView();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(spinner.getContext(),
                 R.array.category_spinner, R.layout.spinner_item_xml);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -324,7 +333,7 @@ public class NewsListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
-                startActivity(new Intent(this, AboutActivity.class));
+                startActivity(new Intent(getActivity(), AboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -335,10 +344,10 @@ public class NewsListActivity extends AppCompatActivity {
         return getResources().getStringArray(R.array.category_spinner)[spinnerPosition].toLowerCase();
     }
 
+
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(CATEGORY_SPINNER_KEY, spinnerPosition);
-
     }
 }
