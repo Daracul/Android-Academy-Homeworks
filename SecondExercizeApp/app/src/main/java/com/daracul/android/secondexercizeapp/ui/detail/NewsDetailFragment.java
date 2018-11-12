@@ -60,6 +60,7 @@ public class NewsDetailFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_scrolling, container, false);
+        Log.d(LOG_TAG,"Detail:onCreateView");
         setHasOptionsMenu(true);
         return view;
     }
@@ -67,6 +68,7 @@ public class NewsDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d(LOG_TAG,"Detail:onActivityCreated");
         if (getActivity()!=null){
             int position = getArguments().getInt(KEY_FOR_POSITION);
             db = new Db(getActivity().getApplicationContext());
@@ -77,6 +79,7 @@ public class NewsDetailFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_detail, menu);
+        Log.d(LOG_TAG,"Detail:onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -102,6 +105,7 @@ public class NewsDetailFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(LOG_TAG,"Detail:onStop");
         compositeDisposable.clear();
     }
 

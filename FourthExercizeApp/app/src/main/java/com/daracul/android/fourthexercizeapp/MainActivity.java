@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     semaphore.acquire();
                     System.out.println("Left step");
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

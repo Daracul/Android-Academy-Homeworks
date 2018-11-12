@@ -24,7 +24,6 @@ import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.network.DefaultResponse;
 import com.daracul.android.secondexercizeapp.network.RestApi;
 import com.daracul.android.secondexercizeapp.ui.about.AboutActivity;
-import com.daracul.android.secondexercizeapp.ui.detail.NewsDetailFragment;
 import com.daracul.android.secondexercizeapp.utils.State;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 import com.daracul.android.secondexercizeapp.utils.VerticalSpaceItemDecoration;
@@ -35,6 +34,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -96,7 +97,7 @@ public class NewsListFragment extends Fragment {
             this.bundle = savedInstanceState;
 
         }
-        Log.d(LOG_TAG,"onCreateView");
+        Log.d(LOG_TAG,"List:onCreateView");
         View view = inflater.inflate(R.layout.fragment_news_list,container,false);
         setHasOptionsMenu(true);
         setupUI(view);
@@ -110,7 +111,7 @@ public class NewsListFragment extends Fragment {
         if (getActivity()!=null){
             db = new Db(getActivity().getApplicationContext());
             subcribeToDataFromDb();
-            Log.d(LOG_TAG,"onStart");
+            Log.d(LOG_TAG,"List:onStart");
         }
     }
 
@@ -127,7 +128,16 @@ public class NewsListFragment extends Fragment {
     private void setupUI(View view) {
         setupRecyclerView(view);
         setupFab(view);
+        setupActionBar();
         findViews(view);
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setTitle(R.string.app_name);
+        }
     }
 
     private void setupFab(View view) {
@@ -146,9 +156,10 @@ public class NewsListFragment extends Fragment {
         adapter = new NewsRecyclerAdapter(view.getContext(), clickListener);
         list.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager;
-        if (Utils.isHorizontal(view.getContext())) {
-            layoutManager = new GridLayoutManager(view.getContext(), 2);
-        } else layoutManager = new LinearLayoutManager(view.getContext());
+//        if (Utils.isHorizontal(view.getContext())) {
+//            layoutManager = new GridLayoutManager(view.getContext(), 2);
+//        } else
+        layoutManager = new LinearLayoutManager(view.getContext());
         list.addItemDecoration(
                 new VerticalSpaceItemDecoration(Utils.convertDpToPixel(SPACE_BETWEEN_CARDS_IN_DP,
                         view.getContext())));
@@ -187,12 +198,14 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(LOG_TAG,"List:onStop");
         compositeDisposable.clear();
         db = null;
     }
 
     @Override
     public void onDetach() {
+        Log.d(LOG_TAG,"List:onDetach");
         detailFragmentListener = null;
         super.onDetach();
     }
@@ -200,6 +213,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(LOG_TAG,"List:onDestroy");
         if (list != null) list = null;
         if (adapter != null) adapter = null;
     }
@@ -321,7 +335,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
-        Log.d(LOG_TAG,"Creating menu");
+        Log.d(LOG_TAG,"List:Creating menu");
         setupSpinner(menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -335,7 +349,7 @@ public class NewsListFragment extends Fragment {
         spinner.setAdapter(adapter);
 
         if (bundle != null) {
-            Log.d(LOG_TAG,"restoring from bundle in setupspinner spinner position: "+bundle.getInt(CATEGORY_SPINNER_KEY));
+            Log.d(LOG_TAG,"List: restoring from bundle in setupspinner spinner position: "+bundle.getInt(CATEGORY_SPINNER_KEY));
             spinner.setSelection(bundle.getInt(CATEGORY_SPINNER_KEY, 0));
         }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -369,7 +383,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(LOG_TAG,"Saving spinner numb");
+        Log.d(LOG_TAG,"List:Saving spinner numb");
         outState.putInt(CATEGORY_SPINNER_KEY, spinnerPosition);
 
     }
