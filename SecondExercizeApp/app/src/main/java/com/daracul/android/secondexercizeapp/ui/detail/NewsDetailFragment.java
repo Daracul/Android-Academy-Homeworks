@@ -31,7 +31,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class NewsDetailFragment extends Fragment {
-    private static final String KEY_FOR_POSITION = "position_key";
+    public static final String KEY_FOR_POSITION = "position_key";
     private static final String LOG_TAG = "myLogs";
     private EditText topicTextView;
     private EditText fullTextView;
@@ -199,5 +199,13 @@ public class NewsDetailFragment extends Fragment {
         editText.setFocusableInTouchMode(true);
         editText.setLongClickable(true);
         editText.setBackground(original);
+    }
+
+    public int getPositionId(){
+        int positionId = 0;
+        if (getArguments()!=null){
+            positionId = getArguments().getInt(KEY_FOR_POSITION);
+        }
+        return positionId;
     }
 }
