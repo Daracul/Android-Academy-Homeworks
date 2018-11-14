@@ -5,6 +5,7 @@
     <dimen name="margin_half_standart">8dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_standart">16dp</dimen>
+    <dimen name="margin_intro_screen">32dp</dimen>
     <dimen name="icon_size">28dp</dimen>
     <dimen name="standart_text_size">16sp</dimen>
     <dimen name="text_high">28dp</dimen>
@@ -20,4 +21,6 @@
     <dimen name="image_item_size">110dp</dimen>
     <dimen name="spinner_text_size">20sp</dimen>
     <dimen name="spinner_padding">5dp</dimen>
+    <dimen name="circle_indicator_height">48dp</dimen>
+    <dimen name="welcome_tv_font_size">40sp</dimen>
 </resources>

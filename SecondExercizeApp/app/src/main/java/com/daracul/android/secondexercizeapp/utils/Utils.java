@@ -1,6 +1,7 @@
 package com.daracul.android.secondexercizeapp.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
@@ -15,6 +16,7 @@ import java.util.Locale;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 public class Utils {
+    private static final String SHARED_PREF = "INTRO_SHARED_PREF";
 
     public static int convertDpToPixel(float dp, Context context) {
         Resources resources = context.getResources();
@@ -54,6 +56,18 @@ public class Utils {
             result = date[0] + " at " + formattedTime;
         }
         return result;
+    }
+
+    public static void saveBooleanToSharedPreference(Context context, Boolean whatWeSave, String KEY) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(KEY, whatWeSave);
+        editor.apply();
+    }
+
+    public static boolean loadBooleanFromSharedPreference(Context context, String KEY) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(KEY, true);
     }
 
 }

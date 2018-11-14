@@ -35,11 +35,11 @@ public class IntroFragment extends Fragment {
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         ImageView imageView = new ImageView(getActivity());
         imageView.setImageResource(imageId);
         ViewGroup.LayoutParams imageLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT);
         ((LinearLayout.LayoutParams) imageLP).gravity = Gravity.CENTER;
         imageView.setLayoutParams(imageLP);
         linearLayout.addView(imageView);

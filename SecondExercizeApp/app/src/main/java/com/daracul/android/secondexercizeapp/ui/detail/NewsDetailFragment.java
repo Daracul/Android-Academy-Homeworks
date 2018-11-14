@@ -41,7 +41,7 @@ public class NewsDetailFragment extends Fragment {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
-    public static NewsDetailFragment newInstance(int position){
+    public static NewsDetailFragment newInstance(int position) {
         NewsDetailFragment newsDetailFragment = new NewsDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_FOR_POSITION, position);
@@ -52,7 +52,7 @@ public class NewsDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-}
+    }
 
     @Nullable
     @Override
@@ -60,7 +60,6 @@ public class NewsDetailFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_scrolling, container, false);
-        Log.d(LOG_TAG,"Detail:onCreateView");
         setHasOptionsMenu(true);
         return view;
     }
@@ -68,8 +67,7 @@ public class NewsDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(LOG_TAG,"Detail:onActivityCreated");
-        if (getActivity()!=null){
+        if (getActivity() != null) {
             int position = getArguments().getInt(KEY_FOR_POSITION);
             db = new Db(getActivity().getApplicationContext());
             loadDataFromDb(position);
@@ -79,7 +77,6 @@ public class NewsDetailFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_detail, menu);
-        Log.d(LOG_TAG,"Detail:onCreateOptionsMenu");
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -87,7 +84,7 @@ public class NewsDetailFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit:
-                makeLookLikeEditText(topicTextView,originalDrawable);
+                makeLookLikeEditText(topicTextView, originalDrawable);
                 makeLookLikeEditText(fullTextView, originalDrawable);
                 return true;
             case R.id.action_save:
@@ -105,12 +102,11 @@ public class NewsDetailFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(LOG_TAG,"Detail:onStop");
         compositeDisposable.clear();
     }
 
     private void updateDb() {
-        if (news!=null){
+        if (news != null) {
             news.setTitle(topicTextView.getText().toString());
             news.setPreviewText(fullTextView.getText().toString());
             Disposable disposable = db.updateNews(news)
@@ -123,7 +119,7 @@ public class NewsDetailFragment extends Fragment {
     }
 
     private void deleteFromdDb() {
-        if (news!=null){
+        if (news != null) {
             Disposable disposable = db.deleteNews(news)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -160,7 +156,7 @@ public class NewsDetailFragment extends Fragment {
     private void fillViews(News news) {
         this.news = news;
         View view = getView();
-        if (view!=null) {
+        if (view != null) {
             topicTextView = view.findViewById(R.id.topic);
             originalDrawable = topicTextView.getBackground();
             TextView dateTextView = view.findViewById(R.id.date);
@@ -175,12 +171,12 @@ public class NewsDetailFragment extends Fragment {
             if (!news.getImageUrl().isEmpty()) {
                 Utils.loadImageAndSetToView(news.getImageUrl(), pictureImageView);
             } else pictureImageView.setImageResource(R.drawable.placeholder);
-            setupActionBar(news.getCategory(),view);
+            setupActionBar(news.getCategory(), view);
         }
     }
 
     private void setupActionBar(String title, View view) {
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(title);
@@ -201,9 +197,9 @@ public class NewsDetailFragment extends Fragment {
         editText.setBackground(original);
     }
 
-    public int getPositionId(){
+    public int getPositionId() {
         int positionId = 0;
-        if (getArguments()!=null){
+        if (getArguments() != null) {
             positionId = getArguments().getInt(KEY_FOR_POSITION);
         }
         return positionId;

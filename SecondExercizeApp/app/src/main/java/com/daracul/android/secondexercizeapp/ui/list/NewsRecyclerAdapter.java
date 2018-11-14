@@ -92,8 +92,8 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
             previewTextView.setText(newsItem.getPreviewText());
             dateTextView.setText(Utils.formatDateFromApi(newsItem.getPublishDate()));
             String imageUrl = newsItem.getImageUrl();
-            if (!imageUrl.isEmpty()){
-                Utils.loadImageAndSetToView(imageUrl,pictureView);
+            if (!imageUrl.isEmpty()) {
+                Utils.loadImageAndSetToView(imageUrl, pictureView);
             } else pictureView.setImageResource(R.drawable.placeholder);
             id = newsItem.getId();
         }

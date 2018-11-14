@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity implements NewsListFragment.
     private boolean isTwoPanel;
 
 
-
     public static void start(Activity activity) {
         Intent newsListActivity = new Intent(activity, MainActivity.class);
         activity.startActivity(newsListActivity);
@@ -32,43 +31,42 @@ public class MainActivity extends AppCompatActivity implements NewsListFragment.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        isTwoPanel = findViewById(R.id.frame_detail)!=null;
+        isTwoPanel = findViewById(R.id.frame_detail) != null;
 
-            if (savedInstanceState==null){
-                NewsListFragment newsListFragment = (NewsListFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
-                if (newsListFragment==null){
-                    newsListFragment = new NewsListFragment();
-                }
-                getSupportFragmentManager().beginTransaction().
-                        replace(R.id.frame_list,newsListFragment,TAG_LIST_FRAGMENT).addToBackStack(TAG_LIST_FRAGMENT).commit();
-                if (isTwoPanel){
-                    getSupportFragmentManager().popBackStack(TAG_DETAIL_FRAGMENT,FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    //checkicng if we have newsDetail in frame_list
-
-                    Bundle arguments = new Bundle();
-                    arguments.putInt(NewsDetailFragment.KEY_FOR_POSITION,0);
-                    NewsDetailFragment newsDetailFragment = new NewsDetailFragment();
-                    newsDetailFragment.setArguments(arguments);
-                    getSupportFragmentManager().beginTransaction().
-                            replace(R.id.frame_detail,newsDetailFragment,TAG_DETAIL_FRAGMENT).commit();
-                }
-
+        if (savedInstanceState == null) {
+            NewsListFragment newsListFragment = (NewsListFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
+            if (newsListFragment == null) {
+                newsListFragment = new NewsListFragment();
             }
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.frame_list, newsListFragment, TAG_LIST_FRAGMENT).addToBackStack(TAG_LIST_FRAGMENT).commit();
+            if (isTwoPanel) {
+                getSupportFragmentManager().popBackStack(TAG_DETAIL_FRAGMENT, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                //checkicng if we have newsDetail in frame_list
+
+                Bundle arguments = new Bundle();
+                arguments.putInt(NewsDetailFragment.KEY_FOR_POSITION, 0);
+                NewsDetailFragment newsDetailFragment = new NewsDetailFragment();
+                newsDetailFragment.setArguments(arguments);
+                getSupportFragmentManager().beginTransaction().
+                        replace(R.id.frame_detail, newsDetailFragment, TAG_DETAIL_FRAGMENT).commit();
+            }
+
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (isTwoPanel){
-            NewsDetailFragment detailFragment = (NewsDetailFragment)getSupportFragmentManager().findFragmentByTag(TAG_DETAIL_FRAGMENT);
-            if (detailFragment!=null){
-                int position = detailFragment.getPositionId();
-                detailFragment = NewsDetailFragment.newInstance(position);
-            } else  detailFragment = NewsDetailFragment.newInstance(0);
+        if (isTwoPanel) {
+            int position = 0;
+            NewsDetailFragment detailFragment = (NewsDetailFragment) getSupportFragmentManager().findFragmentByTag(TAG_DETAIL_FRAGMENT);
+            if (detailFragment != null) {
+                position = detailFragment.getPositionId();
+            } else detailFragment = NewsDetailFragment.newInstance(0);
             getSupportFragmentManager().beginTransaction().
-                    replace(R.id.frame_list,getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT)).
-                    replace(R.id.frame_detail,detailFragment)
-                    .commit();
+                    replace(R.id.frame_list, getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT)).commit();
+            openDetailFragment(position);
         }
     }
 
@@ -80,23 +78,25 @@ public class MainActivity extends AppCompatActivity implements NewsListFragment.
 
     @Override
     public void onBackPressed() {
-        if (isTwoPanel){
+        if (isTwoPanel) {
             finish();
-        } else if (getSupportFragmentManager().getBackStackEntryCount() <=1){
+        } else if (getSupportFragmentManager().getBackStackEntryCount() <= 1) {
             finish();
             return;
         }
         super.onBackPressed();
     }
 
+
     @Override
     public void openDetailFragment(int id) {
-            NewsDetailFragment newsDetailFragment = NewsDetailFragment.newInstance(id);
-            int frameId = isTwoPanel?R.id.frame_detail:R.id.frame_list;
-            getSupportFragmentManager().beginTransaction()
-                    .replace(frameId,newsDetailFragment,TAG_DETAIL_FRAGMENT)
-                    .addToBackStack(TAG_DETAIL_FRAGMENT)
-                    .commit();
-        }
+        NewsDetailFragment newsDetailFragment = NewsDetailFragment.newInstance(id);
+        int frameId = isTwoPanel ? R.id.frame_detail : R.id.frame_list;
+        getSupportFragmentManager().beginTransaction()
+                .replace(frameId, newsDetailFragment, TAG_DETAIL_FRAGMENT)
+                .addToBackStack(TAG_DETAIL_FRAGMENT)
+                .commit();
     }
+}
+
 

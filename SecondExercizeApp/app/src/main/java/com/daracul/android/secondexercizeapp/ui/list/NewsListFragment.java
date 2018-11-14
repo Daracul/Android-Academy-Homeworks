@@ -66,7 +66,7 @@ public class NewsListFragment extends Fragment {
     private DetailFragmentListener detailFragmentListener;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public interface DetailFragmentListener{
+    public interface DetailFragmentListener {
         void openDetailFragment(int id);
     }
 
@@ -74,7 +74,7 @@ public class NewsListFragment extends Fragment {
             new NewsRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(int id) {
-                    if (detailFragmentListener!=null){
+                    if (detailFragmentListener != null) {
                         detailFragmentListener.openDetailFragment(id);
                     }
                 }
@@ -83,8 +83,8 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (getActivity() instanceof DetailFragmentListener){
-            detailFragmentListener = (DetailFragmentListener)getActivity();
+        if (getActivity() instanceof DetailFragmentListener) {
+            detailFragmentListener = (DetailFragmentListener) getActivity();
         }
     }
 
@@ -97,8 +97,7 @@ public class NewsListFragment extends Fragment {
             this.bundle = savedInstanceState;
 
         }
-        Log.d(LOG_TAG,"List:onCreateView");
-        View view = inflater.inflate(R.layout.fragment_news_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_news_list, container, false);
         setHasOptionsMenu(true);
         setupUI(view);
         setupUX();
@@ -108,10 +107,9 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (getActivity()!=null){
+        if (getActivity() != null) {
             db = new Db(getActivity().getApplicationContext());
             subcribeToDataFromDb();
-            Log.d(LOG_TAG,"List:onStart");
         }
     }
 
@@ -123,6 +121,8 @@ public class NewsListFragment extends Fragment {
                         [spinnerPosition].toLowerCase());
             }
         });
+
+        //TODO 5. Move all listeners for views here
     }
 
     private void setupUI(View view) {
@@ -133,7 +133,7 @@ public class NewsListFragment extends Fragment {
     }
 
     private void setupActionBar() {
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setTitle(R.string.app_name);
@@ -141,13 +141,13 @@ public class NewsListFragment extends Fragment {
     }
 
     private void setupFab(View view) {
-            FloatingActionButton fab = view.findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    loadNews(getCurrentNewsCategory(spinnerPosition));
-                }
-            });
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadNews(getCurrentNewsCategory(spinnerPosition));
+            }
+        });
     }
 
 
@@ -198,14 +198,12 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(LOG_TAG,"List:onStop");
         compositeDisposable.clear();
         db = null;
     }
 
     @Override
     public void onDetach() {
-        Log.d(LOG_TAG,"List:onDetach");
         detailFragmentListener = null;
         super.onDetach();
     }
@@ -213,13 +211,13 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(LOG_TAG,"List:onDestroy");
         if (list != null) list = null;
         if (adapter != null) adapter = null;
     }
 
     private void loadNews(String category) {
         showState(State.Loading);
+        //TODO 1. make data load from net and save to DB in 1 chain
         final Disposable disposable = RestApi.getInstance()
                 .news()
                 .newsObject(category)
@@ -249,6 +247,7 @@ public class NewsListFragment extends Fragment {
 
 
     private void checkResponseAndShowState(@NonNull Response<DefaultResponse<List<ResultDTO>>> response) {
+        //TODO 2. Remove cheching response and make mapper instead of converter class
 
         if (!response.isSuccessful()) {
             showState(State.ServerError);
@@ -293,6 +292,7 @@ public class NewsListFragment extends Fragment {
 
 
     private void showState(@NonNull State state) {
+        // TODO 3. Refactor this
         switch (state) {
             case HasData:
                 viewError.setVisibility(View.GONE);
@@ -335,7 +335,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
-        Log.d(LOG_TAG,"List:Creating menu");
+        // TODO 4. Move spinned to toolbar using CoordinatorLayout, remove it in menu
         setupSpinner(menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -349,7 +349,6 @@ public class NewsListFragment extends Fragment {
         spinner.setAdapter(adapter);
 
         if (bundle != null) {
-            Log.d(LOG_TAG,"List: restoring from bundle in setupspinner spinner position: "+bundle.getInt(CATEGORY_SPINNER_KEY));
             spinner.setSelection(bundle.getInt(CATEGORY_SPINNER_KEY, 0));
         }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -383,7 +382,6 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(LOG_TAG,"List:Saving spinner numb");
         outState.putInt(CATEGORY_SPINNER_KEY, spinnerPosition);
 
     }

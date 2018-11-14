@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.daracul.android.secondexercizeapp.R;
 import com.daracul.android.secondexercizeapp.ui.list.MainActivity;
+import com.daracul.android.secondexercizeapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +17,14 @@ import androidx.viewpager.widget.ViewPager;
 import me.relex.circleindicator.CircleIndicator;
 
 public class IntroScreenActivity extends AppCompatActivity {
-    private static final String SHARED_PREF = "INTRO_SHARED_PREF";
     private static final String SHARED_PREF_KEY = "KEY_SHARED_PREF";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean isLogoShown = initLogoBoolean();
+        boolean isLogoShown = Utils.loadBooleanFromSharedPreference(this, SHARED_PREF_KEY);
         if (isLogoShown) {
-            saveLogoBoolean(false);
+            Utils.saveBooleanToSharedPreference(this, false, SHARED_PREF_KEY);
             setContentView(R.layout.activity_intro);
             findViewById(R.id.tv_welcome).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -34,7 +34,7 @@ public class IntroScreenActivity extends AppCompatActivity {
             });
             setupViewPager();
         } else {
-            saveLogoBoolean(true);
+            Utils.saveBooleanToSharedPreference(this, true, SHARED_PREF_KEY);
             MainActivity.start(this);
         }
 
@@ -42,7 +42,7 @@ public class IntroScreenActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         ViewPager viewPager = findViewById(R.id.view_pager);
-        IntroPageAdapter pageAdapter = new IntroPageAdapter(getSupportFragmentManager(),createImageIdList());
+        IntroPageAdapter pageAdapter = new IntroPageAdapter(getSupportFragmentManager(), createImageIdList());
         CircleIndicator indicator = findViewById(R.id.indicator);
         viewPager.setAdapter(pageAdapter);
         indicator.setViewPager(viewPager);
@@ -54,23 +54,12 @@ public class IntroScreenActivity extends AppCompatActivity {
         finish();
     }
 
-    private List<Integer> createImageIdList(){
-        List<Integer> imageIdList = new ArrayList<>() ;
+    private List<Integer> createImageIdList() {
+        List<Integer> imageIdList = new ArrayList<>();
         imageIdList.add(R.drawable.image1);
         imageIdList.add(R.drawable.image2);
         imageIdList.add(R.drawable.image3);
         return imageIdList;
     }
 
-    private void saveLogoBoolean(Boolean showLogo) {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(SHARED_PREF_KEY, showLogo);
-        editor.apply();
-    }
-
-    private boolean initLogoBoolean() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        return sharedPreferences.getBoolean(SHARED_PREF_KEY, true);
-    }
 }
