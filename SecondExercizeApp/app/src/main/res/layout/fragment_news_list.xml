@@ -5,10 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/recycler_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
@@ -23,8 +26,9 @@
             android:layout_gravity="end|bottom"
             android:src="@drawable/baseline_autorenew_24"
             android:layout_margin="16dp" />
+        </FrameLayout>
 
-    </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <FrameLayout
         android:id="@+id/lt_loading"

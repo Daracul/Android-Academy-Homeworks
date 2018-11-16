@@ -166,7 +166,7 @@ public class NewsDetailFragment extends Fragment {
             ImageView pictureImageView = view.findViewById(R.id.news_picture);
 
             topicTextView.setText(news.getTitle());
-            dateTextView.setText(Utils.formatDateFromApi(news.getPublishDate()));
+            dateTextView.setText(Utils.formatDateTime(view.getContext(), news.getPublishDate()));
             fullTextView.setText(news.getPreviewText());
             if (!news.getImageUrl().isEmpty()) {
                 Utils.loadImageAndSetToView(news.getImageUrl(), pictureImageView);

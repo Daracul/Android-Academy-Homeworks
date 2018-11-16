@@ -1,10 +1,14 @@
 package com.daracul.android.secondexercizeapp.database;
 
+import java.util.Date;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 @Entity(tableName = "news")
+@TypeConverters(DateConverter.class)
 public class News {
 
     @PrimaryKey(autoGenerate = true)
@@ -14,13 +18,13 @@ public class News {
     private String imageUrl;
     private String category;
     @ColumnInfo(name = "publish_date")
-    private String publishDate;
+    private Date publishDate;
     @ColumnInfo(name = "preview_text")
     private String previewText;
     @ColumnInfo(name = "text_url")
     private String textUrl;
 
-    public News(String title, String imageUrl, String category, String publishDate,
+    public News(String title, String imageUrl, String category, Date publishDate,
                 String previewText, String textUrl) {
         this.title = title;
         this.imageUrl = imageUrl;
@@ -46,7 +50,7 @@ public class News {
         return category;
     }
 
-    public String getPublishDate() {
+    public Date getPublishDate() {
         return publishDate;
     }
 
@@ -74,7 +78,7 @@ public class News {
         this.category = category;
     }
 
-    public void setPublishDate(String publishDate) {
+    public void setPublishDate(Date publishDate) {
         this.publishDate = publishDate;
     }
 

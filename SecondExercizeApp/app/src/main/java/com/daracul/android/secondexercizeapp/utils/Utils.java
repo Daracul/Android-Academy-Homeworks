@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
@@ -33,6 +34,11 @@ public class Utils {
     public static String convertDateToString(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm 'at' dd.MM.yyyy", Locale.getDefault());
         return sdf.format(date);
+    }
+
+    public static CharSequence formatDateTime(Context context, Date date){
+        return DateUtils.getRelativeDateTimeString(context,date.getTime(),DateUtils.HOUR_IN_MILLIS,
+                2*DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_RELATIVE);
     }
 
     public static boolean isHorizontal(Context context) {

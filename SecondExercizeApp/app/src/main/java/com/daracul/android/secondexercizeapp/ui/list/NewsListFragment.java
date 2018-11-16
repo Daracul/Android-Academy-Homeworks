@@ -40,6 +40,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -58,7 +59,7 @@ public class NewsListFragment extends Fragment {
     private View viewError;
     private View viewLoading;
     private View viewNoData;
-    private View recyclerScreen;
+    private SwipeRefreshLayout recyclerScreen;
     private TextView tvError;
     private int spinnerPosition;
     private Bundle bundle;
@@ -119,6 +120,13 @@ public class NewsListFragment extends Fragment {
             public void onClick(View v) {
                 loadNews(getResources().getStringArray(R.array.category_spinner)
                         [spinnerPosition].toLowerCase());
+            }
+        });
+
+        recyclerScreen.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadNews(getCurrentNewsCategory(spinnerPosition));
             }
         });
 
@@ -217,6 +225,8 @@ public class NewsListFragment extends Fragment {
 
     private void loadNews(String category) {
         showState(State.Loading);
+        recyclerScreen.setRefreshing(false);
+
         //TODO 1. make data load from net and save to DB in 1 chain
         final Disposable disposable = RestApi.getInstance()
                 .news()

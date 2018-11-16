@@ -16,7 +16,7 @@ public interface NewsDao {
     @Query("SELECT * FROM news")
     List<News> getAllNews();
 
-    @Query("SELECT * FROM news")
+    @Query("SELECT * FROM news ORDER BY publish_date DESC")
     Observable<List<News>> getAllNewsObservable();
 
     @Query("SELECT * FROM news WHERE id = :id")

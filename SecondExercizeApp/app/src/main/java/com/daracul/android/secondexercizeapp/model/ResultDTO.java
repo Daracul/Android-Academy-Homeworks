@@ -1,5 +1,6 @@
 package com.daracul.android.secondexercizeapp.model;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -26,7 +27,7 @@ public class ResultDTO {
     private String author;
     @SerializedName("published_date")
     @Expose
-    private String publishedDate;
+    private Date publishedDate;
     @SerializedName("multimedia")
     @Expose
     private List<MultimediaDTO> multimedia = null;
@@ -61,7 +62,7 @@ public class ResultDTO {
     }
 
 
-    public String getPublishedDate() {
+    public Date getPublishedDate() {
         return publishedDate;
     }
 
