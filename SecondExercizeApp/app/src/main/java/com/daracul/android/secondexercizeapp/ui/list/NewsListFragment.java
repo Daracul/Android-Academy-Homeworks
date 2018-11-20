@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.model.DataConverter;
+import com.daracul.android.secondexercizeapp.model.NewsMapper;
 import com.daracul.android.secondexercizeapp.model.ResultDTO;
 import com.daracul.android.secondexercizeapp.database.Db;
 import com.daracul.android.secondexercizeapp.database.News;
@@ -37,15 +37,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 
@@ -232,11 +232,26 @@ public class NewsListFragment extends Fragment {
                 .news()
                 .newsObject(category)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Response<DefaultResponse<List<ResultDTO>>>>() {
+                .observeOn(Schedulers.io())
+                .map(new Function<Response<DefaultResponse<List<ResultDTO>>>, List<News>>() {
                     @Override
-                    public void accept(Response<DefaultResponse<List<ResultDTO>>> response) throws Exception {
-                        checkResponseAndShowState(response);
+                    public List<News> apply(Response<DefaultResponse<List<ResultDTO>>> defaultResponseResponse) throws Exception {
+                        return NewsMapper.convertDTOListToNewsItem(defaultResponseResponse);
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<List<News>, SingleSource<?>>() {
+                    @Override
+                    public SingleSource<?> apply(List<News> newsList) throws Exception {
+                        return db.saveNews(newsList);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        list.scrollToPosition(0);
+                        showState(State.HasData);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -255,50 +270,6 @@ public class NewsListFragment extends Fragment {
         showState(State.ServerError);
     }
 
-
-    private void checkResponseAndShowState(@NonNull Response<DefaultResponse<List<ResultDTO>>> response) {
-        //TODO 2. Remove cheching response and make mapper instead of converter class
-
-        if (!response.isSuccessful()) {
-            showState(State.ServerError);
-            return;
-        }
-
-        final DefaultResponse<List<ResultDTO>> body = response.body();
-        if (body == null) {
-            showState(State.HasNoData);
-            return;
-        }
-
-        final List<ResultDTO> data = body.getData();
-        if (data == null) {
-            showState(State.HasNoData);
-            return;
-        }
-
-        if (data.isEmpty()) {
-            showState(State.HasNoData);
-            return;
-        }
-
-        List<News> newsList = DataConverter.convertDTOListToNewsItem(data);
-        Disposable disposable = db.saveNews(newsList)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        list.scrollToPosition(0);
-                        showState(State.HasData);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e(LOG_TAG, throwable.toString());
-                    }
-                });
-        compositeDisposable.add(disposable);
-    }
 
 
     private void showState(@NonNull State state) {

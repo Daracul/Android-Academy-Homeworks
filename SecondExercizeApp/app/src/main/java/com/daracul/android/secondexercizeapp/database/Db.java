@@ -20,19 +20,20 @@ public class Db {
         dataBase = AppDataBase.getAppDatabase(context);
     }
 
-    public Completable saveNews(final List<News> newsList){
-        return Completable.fromCallable(new Callable<Void>() {
+    public Single saveNews(final List<News> newsList){
+        return Single.fromCallable(new Callable<List<News>>() {
             @Override
-            public Void call() throws Exception {
+            public List<News> call() throws Exception {
                 dataBase.newsDao().deleteAll();
 
                 News[] news = newsList.toArray(new News[newsList.size()]);
 
                 dataBase.newsDao().insertAll(news);
-                return null;
+                return newsList;
             }
         });
     }
+
 
     public Single<List<News>> getNews(){
         return Single.fromCallable(new Callable<List<News>>() {
