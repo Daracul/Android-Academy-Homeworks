@@ -24,6 +24,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.about.AboutActivity" />
+
+        <service
+            android:name=".sync.NewsLoadService"
+            android:exported="false" />
+        <receiver
+            android:name=".sync.StopServiceReciever"
+            android:enabled="true"
+            android:process=":remote" />
     </application>
 
 </manifest>

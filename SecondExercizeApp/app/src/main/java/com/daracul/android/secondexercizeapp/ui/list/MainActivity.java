@@ -8,8 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.daracul.android.secondexercizeapp.R;
+import com.daracul.android.secondexercizeapp.sync.NewsLoadService;
 import com.daracul.android.secondexercizeapp.ui.detail.NewsDetailFragment;
 import com.daracul.android.secondexercizeapp.utils.Utils;
+import com.daracul.android.secondexercizeapp.utils.VersionUtils;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NewsListFragment.
 
         }
     }
+
 
     @Override
     protected void onStart() {

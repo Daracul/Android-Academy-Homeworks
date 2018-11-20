@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daracul.android.secondexercizeapp.R;
+import com.daracul.android.secondexercizeapp.sync.NewsLoadService;
 import com.daracul.android.secondexercizeapp.ui.list.MainActivity;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 
@@ -22,6 +23,7 @@ public class IntroScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NewsLoadService.start(this);
         boolean isLogoShown = Utils.loadBooleanFromSharedPreference(this, SHARED_PREF_KEY);
         if (isLogoShown) {
             Utils.saveBooleanToSharedPreference(this, false, SHARED_PREF_KEY);

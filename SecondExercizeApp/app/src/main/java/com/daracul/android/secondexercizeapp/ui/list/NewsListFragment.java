@@ -226,8 +226,6 @@ public class NewsListFragment extends Fragment {
     private void loadNews(String category) {
         showState(State.Loading);
         recyclerScreen.setRefreshing(false);
-
-        //TODO 1. make data load from net and save to DB in 1 chain
         final Disposable disposable = RestApi.getInstance()
                 .news()
                 .newsObject(category)
@@ -250,12 +248,14 @@ public class NewsListFragment extends Fragment {
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
+                        Log.d("myLogs","No error ");
                         list.scrollToPosition(0);
                         showState(State.HasData);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Log.d("myLogs","we have error? "+ throwable.getMessage());
                         handleError(throwable);
                     }
                 });
