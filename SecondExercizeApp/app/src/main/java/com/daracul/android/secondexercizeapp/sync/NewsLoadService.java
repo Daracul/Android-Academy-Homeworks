@@ -14,6 +14,7 @@ import com.daracul.android.secondexercizeapp.model.NewsMapper;
 import com.daracul.android.secondexercizeapp.model.ResultDTO;
 import com.daracul.android.secondexercizeapp.network.DefaultResponse;
 import com.daracul.android.secondexercizeapp.network.RestApi;
+import com.daracul.android.secondexercizeapp.utils.NetworkUtils;
 import com.daracul.android.secondexercizeapp.utils.NotificationUtils;
 import com.daracul.android.secondexercizeapp.utils.VersionUtils;
 
@@ -57,24 +58,17 @@ public class NewsLoadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         db = new Db(this.getApplicationContext());
-        disposable = RestApi.getInstance()
-                .news()
-                .newsObject(DEFAULT_NEWS_CATEGORY)
-                .subscribeOn(Schedulers.io())
-                .delay(10,TimeUnit.SECONDS)
-                .observeOn(Schedulers.io())
-                .map(new Function<Response<DefaultResponse<List<ResultDTO>>>, List<News>>() {
+        disposable = NetworkUtils.networkUtils.getOnlineNetwork()
+                .timeout(1,TimeUnit.MINUTES)
+                .flatMap(new Function<Boolean, SingleSource<?>>() {
                     @Override
-                    public List<News> apply(Response<DefaultResponse<List<ResultDTO>>> defaultResponseResponse) throws Exception {
-                        return NewsMapper.convertDTOListToNewsItem(defaultResponseResponse);
+                    public SingleSource<?> apply(Boolean aBoolean) throws Exception {
+                        return DownloadingNews.updateNews(db, DEFAULT_NEWS_CATEGORY);
                     }
                 })
-                .flatMap(new Function<List<News>, SingleSource<?>>() {
-                    @Override
-                    public SingleSource<?> apply(List<News> newsList) throws Exception {
-                        return db.saveNews(newsList);
-                    }
-                }).subscribe(new Consumer<Object>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
                         NotificationUtils.showResultNotification(NewsLoadService.this,
@@ -85,7 +79,7 @@ public class NewsLoadService extends Service {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         NotificationUtils.showResultNotification(NewsLoadService.this,
-                                throwable.getMessage());
+                                throwable.getClass().getSimpleName());
                         NewsLoadService.this.stopSelf();
                     }
                 });

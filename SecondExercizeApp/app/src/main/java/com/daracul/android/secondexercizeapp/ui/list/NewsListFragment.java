@@ -23,6 +23,7 @@ import com.daracul.android.secondexercizeapp.database.Db;
 import com.daracul.android.secondexercizeapp.database.News;
 import com.daracul.android.secondexercizeapp.network.DefaultResponse;
 import com.daracul.android.secondexercizeapp.network.RestApi;
+import com.daracul.android.secondexercizeapp.sync.DownloadingNews;
 import com.daracul.android.secondexercizeapp.ui.about.AboutActivity;
 import com.daracul.android.secondexercizeapp.utils.State;
 import com.daracul.android.secondexercizeapp.utils.Utils;
@@ -40,6 +41,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -226,36 +228,18 @@ public class NewsListFragment extends Fragment {
     private void loadNews(String category) {
         showState(State.Loading);
         recyclerScreen.setRefreshing(false);
-        final Disposable disposable = RestApi.getInstance()
-                .news()
-                .newsObject(category)
+        final Disposable disposable = DownloadingNews.updateNews(db,category)
                 .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .map(new Function<Response<DefaultResponse<List<ResultDTO>>>, List<News>>() {
-                    @Override
-                    public List<News> apply(Response<DefaultResponse<List<ResultDTO>>> defaultResponseResponse) throws Exception {
-                        return NewsMapper.convertDTOListToNewsItem(defaultResponseResponse);
-                    }
-                })
-                .observeOn(Schedulers.io())
-                .flatMap(new Function<List<News>, SingleSource<?>>() {
-                    @Override
-                    public SingleSource<?> apply(List<News> newsList) throws Exception {
-                        return db.saveNews(newsList);
-                    }
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        Log.d("myLogs","No error ");
                         list.scrollToPosition(0);
                         showState(State.HasData);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.d("myLogs","we have error? "+ throwable.getMessage());
                         handleError(throwable);
                     }
                 });
