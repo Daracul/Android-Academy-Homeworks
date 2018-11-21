@@ -19,36 +19,32 @@ import androidx.core.app.NotificationCompat;
 public class NotificationUtils {
 
     private static final String CHANNEL_ID = "news:notification:channel";
+    private static final String CHANNEL_ID_POP_UP = "news:notification:channel:pops";
     private static final int RESULT_NOTIFY_ID = 5432;
 
     public static Notification createForegroundNotification(Context context){
-        createNotificationChannel(context);
+        if (VersionUtils.atLeastOreo()) {
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            NotificationChannel channel = notificationManager.getNotificationChannel(CHANNEL_ID);
+            if (channel == null) {
+                int importance = NotificationManager.IMPORTANCE_LOW;
+                CharSequence name = context.getString(R.string.channel_name);
+                channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            }
+            notificationManager.createNotificationChannel(channel);
+        }
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(context.getString(R.string.notification_news_update))
                 .addAction(cancelUpdate(context))
                 .setAutoCancel(true);
         if (!VersionUtils.atLeastOreo()) {
-            mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+            mBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         }
         return mBuilder.build();
     }
 
-    public static void showResultNotification(Context context){
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(context.getString(R.string.app_name))
-                .setContentText("News sucessfully updated")
-                .setDefaults(Notification.DEFAULT_ALL);
-        if (!VersionUtils.atLeastOreo()) {
-            mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        }
-        NotificationManager notificationManager = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(RESULT_NOTIFY_ID, mBuilder.build());
-
-    }
 
     private static NotificationCompat.Action cancelUpdate(Context context) {
         Intent stopSelf = new Intent(context, StopServiceReciever.class);
@@ -56,76 +52,41 @@ public class NotificationUtils {
         return new NotificationCompat.Action(R.drawable.baseline_account_circle_24,"Cancel",pendingIntent);
     }
 
-    private static void createNotificationChannel(Context context) {
-        if (VersionUtils.atLeastOreo()) {
-            CharSequence name = context.getString(R.string.channel_name);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
 
-    public static void createNotification(Context context, String aMessage) {
-        final int NOTIFY_ID = 1002;
-
-        // There are hardcoding only for show it's just strings
-        String name = "my_package_channel";
-        String id = "my_package_channel_1"; // The user-visible name of the channel.
-        String description = "my_package_first_channel"; // The user-visible description of the channel.
-
-        Intent intent;
-        PendingIntent pendingIntent;
-        NotificationCompat.Builder builder;
-
+    public static void showResultNotification(Context context, String message) {
+        String name = context.getString(R.string.channel_name_pop_up);
         NotificationManager notifManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-
 
         if (VersionUtils.atLeastOreo()) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = notifManager.getNotificationChannel(id);
+            NotificationChannel mChannel = notifManager.getNotificationChannel(CHANNEL_ID_POP_UP);
             if (mChannel == null) {
-                mChannel = new NotificationChannel(id, name, importance);
-                mChannel.setDescription(description);
+                mChannel = new NotificationChannel(CHANNEL_ID_POP_UP, name, importance);
                 mChannel.enableVibration(true);
                 mChannel.setLightColor(Color.GREEN);
                 mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
                 notifManager.createNotificationChannel(mChannel);
             }
-            builder = new NotificationCompat.Builder(context, id);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID_POP_UP);
 
-            intent = new Intent(context, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-            builder.setContentTitle(aMessage)  // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder) // required
-                    .setContentText(context.getString(R.string.app_name))  // required
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setTicker(aMessage)
-                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-        } else {
-
-            builder = new NotificationCompat.Builder(context);
-
-            intent = new Intent(context, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-            builder.setContentTitle(aMessage)                           // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder) // required
-                    .setContentText(context.getString(R.string.app_name))  // required
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setTicker(aMessage)
-                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
-                    .setPriority(Notification.PRIORITY_HIGH);
-        } // else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        builder.setContentTitle(message)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setContentText(context.getString(R.string.app_name))
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setTicker(message)
+                .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        if (!VersionUtils.atLeastOreo()) {
+            builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        }
 
         Notification notification = builder.build();
-        notifManager.notify(NOTIFY_ID, notification);
+        notifManager.notify(RESULT_NOTIFY_ID, notification);
     }
 }

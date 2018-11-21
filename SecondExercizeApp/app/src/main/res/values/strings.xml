@@ -23,6 +23,8 @@
     <string name="welcome_screen">Welcome!</string>
     <string name="channel_name">Primary</string>
     <string name="notification_news_update">News updating ...</string>
+    <string name="channel_name_pop_up">Primary pop up</string>
+    <string name="sucess_message">News successfully updated</string>
     <array name="category_spinner">
         <item>Home</item>
         <item>Opinion</item>

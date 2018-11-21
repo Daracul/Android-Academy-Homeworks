@@ -15,7 +15,6 @@ import com.daracul.android.secondexercizeapp.model.ResultDTO;
 import com.daracul.android.secondexercizeapp.network.DefaultResponse;
 import com.daracul.android.secondexercizeapp.network.RestApi;
 import com.daracul.android.secondexercizeapp.utils.NotificationUtils;
-import com.daracul.android.secondexercizeapp.utils.State;
 import com.daracul.android.secondexercizeapp.utils.VersionUtils;
 
 import java.util.List;
@@ -23,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import io.reactivex.SingleSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -71,7 +69,6 @@ public class NewsLoadService extends Service {
                         return NewsMapper.convertDTOListToNewsItem(defaultResponseResponse);
                     }
                 })
-                .observeOn(Schedulers.io())
                 .flatMap(new Function<List<News>, SingleSource<?>>() {
                     @Override
                     public SingleSource<?> apply(List<News> newsList) throws Exception {
@@ -80,13 +77,16 @@ public class NewsLoadService extends Service {
                 }).subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        NotificationUtils.createNotification(NewsLoadService.this,"Success suka");
+                        NotificationUtils.showResultNotification(NewsLoadService.this,
+                                NewsLoadService.this.getString(R.string.sucess_message));
                         NewsLoadService.this.stopSelf();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.d("myLogs",throwable.getMessage());
+                        NotificationUtils.showResultNotification(NewsLoadService.this,
+                                throwable.getMessage());
+                        NewsLoadService.this.stopSelf();
                     }
                 });
         return START_STICKY;

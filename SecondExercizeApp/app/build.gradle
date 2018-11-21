@@ -44,5 +44,4 @@ dependencies {
     //circle indicator for viewpager
     implementation 'me.relex:circleindicator:2.1.0'
 
-
 }
