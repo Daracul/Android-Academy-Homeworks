@@ -1,10 +1,11 @@
 package com.daracul.android.secondexercizeapp.utils;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
     private final int verticalSpaceHeight;

@@ -3,6 +3,8 @@ package com.daracul.android.secondexercizeapp.ui.about;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,8 +16,6 @@ import android.widget.Toast;
 
 import com.daracul.android.secondexercizeapp.R;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class AboutActivity extends AppCompatActivity {
     private static final String EMAIL_ADDRESS = "au.malakhov@gmail.com";

@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import androidx.recyclerview.widget.GridLayoutManager;
 
 public class Utils {
     private static final String SHARED_PREF = "INTRO_SHARED_PREF";

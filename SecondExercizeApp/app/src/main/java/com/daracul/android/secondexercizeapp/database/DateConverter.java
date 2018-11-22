@@ -1,8 +1,10 @@
 package com.daracul.android.secondexercizeapp.database;
 
+import android.arch.persistence.room.TypeConverter;
+
 import java.util.Date;
 
-import androidx.room.TypeConverter;
+
 
 public class DateConverter {
 

@@ -5,29 +5,20 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
+import android.support.annotation.Nullable;
 
 import com.daracul.android.secondexercizeapp.R;
 import com.daracul.android.secondexercizeapp.database.Db;
-import com.daracul.android.secondexercizeapp.database.News;
-import com.daracul.android.secondexercizeapp.model.NewsMapper;
-import com.daracul.android.secondexercizeapp.model.ResultDTO;
-import com.daracul.android.secondexercizeapp.network.DefaultResponse;
-import com.daracul.android.secondexercizeapp.network.RestApi;
 import com.daracul.android.secondexercizeapp.utils.NetworkUtils;
 import com.daracul.android.secondexercizeapp.utils.NotificationUtils;
 import com.daracul.android.secondexercizeapp.utils.VersionUtils;
-
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.Nullable;
 import io.reactivex.SingleSource;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Response;
 
 public class NewsLoadService extends Service {
     private static final String DEFAULT_NEWS_CATEGORY = "home";

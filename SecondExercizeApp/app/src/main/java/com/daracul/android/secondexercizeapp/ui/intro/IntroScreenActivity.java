@@ -1,7 +1,10 @@
 package com.daracul.android.secondexercizeapp.ui.intro;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.daracul.android.secondexercizeapp.R;
@@ -12,9 +15,7 @@ import com.daracul.android.secondexercizeapp.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+
 import me.relex.circleindicator.CircleIndicator;
 
 public class IntroScreenActivity extends AppCompatActivity {
@@ -23,7 +24,6 @@ public class IntroScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NewsLoadService.start(this);
         boolean isLogoShown = Utils.loadBooleanFromSharedPreference(this, SHARED_PREF_KEY);
         if (isLogoShown) {
             Utils.saveBooleanToSharedPreference(this, false, SHARED_PREF_KEY);

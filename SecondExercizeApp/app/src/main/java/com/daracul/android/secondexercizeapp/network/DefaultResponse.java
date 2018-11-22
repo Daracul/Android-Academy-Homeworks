@@ -1,6 +1,7 @@
 package com.daracul.android.secondexercizeapp.network;
 
-import androidx.annotation.Nullable;
+
+import android.support.annotation.Nullable;
 
 public class DefaultResponse<T> {
 

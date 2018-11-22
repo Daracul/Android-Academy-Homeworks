@@ -2,11 +2,11 @@ package com.daracul.android.secondexercizeapp.database;
 
 import android.content.Context;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Action;
@@ -44,7 +44,7 @@ public class Db {
         });
     }
 
-    public Observable<List<News>> getNewsObservable(){
+    public Flowable<List<News>> getNewsObservable(){
         return dataBase.newsDao().getAllNewsObservable();
     }
 

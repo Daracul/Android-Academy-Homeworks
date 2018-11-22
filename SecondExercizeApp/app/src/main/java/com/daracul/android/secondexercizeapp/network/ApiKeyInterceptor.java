@@ -1,8 +1,10 @@
 package com.daracul.android.secondexercizeapp.network;
 
+import android.support.annotation.NonNull;
+
 import java.io.IOException;
 
-import androidx.annotation.NonNull;
+
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;

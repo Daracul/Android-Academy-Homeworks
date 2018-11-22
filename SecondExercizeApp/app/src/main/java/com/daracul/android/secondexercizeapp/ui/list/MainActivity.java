@@ -3,19 +3,15 @@ package com.daracul.android.secondexercizeapp.ui.list;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+
 
 import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.sync.NewsLoadService;
 import com.daracul.android.secondexercizeapp.ui.detail.NewsDetailFragment;
-import com.daracul.android.secondexercizeapp.utils.Utils;
-import com.daracul.android.secondexercizeapp.utils.VersionUtils;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
+
 
 public class MainActivity extends AppCompatActivity implements NewsListFragment.DetailFragmentListener {
 
