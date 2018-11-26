@@ -42,10 +42,10 @@ public class NewsDetailFragment extends Fragment {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
-    public static NewsDetailFragment newInstance(int position) {
+    public static NewsDetailFragment newInstance(String id) {
         NewsDetailFragment newsDetailFragment = new NewsDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(KEY_FOR_POSITION, position);
+        bundle.putString(KEY_FOR_POSITION, id);
         newsDetailFragment.setArguments(bundle);
         return newsDetailFragment;
     }
@@ -69,7 +69,7 @@ public class NewsDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (getActivity() != null) {
-            int position = getArguments().getInt(KEY_FOR_POSITION);
+            String position = getArguments().getString(KEY_FOR_POSITION);
             db = new Db(getActivity().getApplicationContext());
             loadDataFromDb(position);
         }
@@ -136,7 +136,7 @@ public class NewsDetailFragment extends Fragment {
     }
 
 
-    private void loadDataFromDb(int position) {
+    private void loadDataFromDb(String position) {
         Disposable disposable = db.getNewsById(position)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -198,10 +198,10 @@ public class NewsDetailFragment extends Fragment {
         editText.setBackground(original);
     }
 
-    public int getPositionId() {
-        int positionId = 0;
+    public String getPositionId() {
+        String  positionId = null;
         if (getArguments() != null) {
-            positionId = getArguments().getInt(KEY_FOR_POSITION);
+            positionId = getArguments().getString(KEY_FOR_POSITION);
         }
         return positionId;
     }

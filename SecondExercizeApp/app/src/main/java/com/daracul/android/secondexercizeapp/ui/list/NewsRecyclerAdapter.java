@@ -54,7 +54,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int itemId);
+        void onItemClick(String itemId);
     }
 
     public void swapData(List<News> newsList) {
@@ -68,7 +68,7 @@ public class NewsRecyclerAdapter extends RecyclerView.Adapter<NewsRecyclerAdapte
         private final TextView previewTextView;
         private final ImageView pictureView;
         private final TextView dateTextView;
-        private int id;
+        private String id;
 
         ViewHolder(@NonNull View itemView, @NonNull final OnItemClickListener clickListener) {
             super(itemView);

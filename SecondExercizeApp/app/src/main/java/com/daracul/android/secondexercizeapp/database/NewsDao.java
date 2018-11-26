@@ -23,7 +23,7 @@ public interface NewsDao {
     Flowable<List<News>> getAllNewsObservable();
 
     @Query("SELECT * FROM news WHERE id = :id")
-    News getNewsById(int id);
+    News getNewsById(String id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(News... news);

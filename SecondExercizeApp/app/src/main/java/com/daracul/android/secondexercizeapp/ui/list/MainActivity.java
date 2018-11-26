@@ -58,11 +58,11 @@ public class MainActivity extends AppCompatActivity implements NewsListFragment.
     protected void onStart() {
         super.onStart();
         if (isTwoPanel) {
-            int position = 0;
+            String position = null;
             NewsDetailFragment detailFragment = (NewsDetailFragment) getSupportFragmentManager().findFragmentByTag(TAG_DETAIL_FRAGMENT);
             if (detailFragment != null) {
                 position = detailFragment.getPositionId();
-            } else detailFragment = NewsDetailFragment.newInstance(0);
+            }
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.frame_list, getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT)).commit();
             openDetailFragment(position);
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NewsListFragment.
 
 
     @Override
-    public void openDetailFragment(int id) {
+    public void openDetailFragment(String id) {
         NewsDetailFragment newsDetailFragment = NewsDetailFragment.newInstance(id);
         int frameId = isTwoPanel ? R.id.frame_detail : R.id.frame_list;
         getSupportFragmentManager().beginTransaction()

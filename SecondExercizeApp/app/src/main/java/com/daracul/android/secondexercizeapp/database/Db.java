@@ -48,7 +48,7 @@ public class Db {
         return dataBase.newsDao().getAllNewsObservable();
     }
 
-    public Single<News> getNewsById(final int id){
+    public Single<News> getNewsById(final String id){
         return Single.fromCallable(new Callable<News>() {
             @Override
             public News call() throws Exception {

@@ -4,8 +4,11 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
+
 
 import java.util.Date;
+
 
 
 
@@ -13,8 +16,9 @@ import java.util.Date;
 @TypeConverters(DateConverter.class)
 public class News {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @NonNull
+    @PrimaryKey
+    private String id;
     private String title;
     @ColumnInfo(name = "image_url")
     private String imageUrl;
@@ -26,8 +30,9 @@ public class News {
     @ColumnInfo(name = "text_url")
     private String textUrl;
 
-    public News(String title, String imageUrl, String category, Date publishDate,
+    public News(String id, String title, String imageUrl, String category, Date publishDate,
                 String previewText, String textUrl) {
+        this.id = id;
         this.title = title;
         this.imageUrl = imageUrl;
         this.category = category;
@@ -36,7 +41,7 @@ public class News {
         this.textUrl = textUrl;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -64,7 +69,7 @@ public class News {
         return textUrl;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

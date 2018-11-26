@@ -11,7 +11,7 @@ import com.daracul.android.secondexercizeapp.utils.NetworkUtils;
 import java.util.concurrent.TimeUnit;
 
 import androidx.work.Constraints;
-import androidx.work.OneTimeWorkRequest;
+
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;

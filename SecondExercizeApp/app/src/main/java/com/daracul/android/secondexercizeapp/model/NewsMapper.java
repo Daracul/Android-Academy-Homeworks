@@ -29,8 +29,9 @@ public class NewsMapper {
         List<ResultDTO> resultDTOS = response.body().getData();
         List<News> newsList = new ArrayList<>(resultDTOS.size());
         for (ResultDTO resultDTO : resultDTOS){
-            newsList.add(new News(resultDTO.getTitle(),resultDTO.checkAndReturnImageUrl(),
-                    resultDTO.getSection(),resultDTO.getPublishedDate(),resultDTO.getShortText(),
+            newsList.add(new News(resultDTO.getTitle()+resultDTO.getUrl(),resultDTO.getTitle(),
+                    resultDTO.checkAndReturnImageUrl(), resultDTO.getSection(),
+                    resultDTO.getPublishedDate(),resultDTO.getShortText(),
                     resultDTO.getUrl()));
         }
         return newsList;

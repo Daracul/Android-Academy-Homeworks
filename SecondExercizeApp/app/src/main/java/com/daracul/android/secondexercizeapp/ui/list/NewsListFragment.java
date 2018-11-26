@@ -64,13 +64,13 @@ public class NewsListFragment extends Fragment {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public interface DetailFragmentListener {
-        void openDetailFragment(int id);
+        void openDetailFragment(String id);
     }
 
     private final NewsRecyclerAdapter.OnItemClickListener clickListener =
             new NewsRecyclerAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(int id) {
+                public void onItemClick(String id) {
                     if (detailFragmentListener != null) {
                         detailFragmentListener.openDetailFragment(id);
                     }
@@ -241,6 +241,7 @@ public class NewsListFragment extends Fragment {
     }
 
     private void handleError(Throwable throwable) {
+        Log.d("myLogs",throwable.getClass().getName() +" message: "+throwable.getMessage());
         if (throwable instanceof IOException) {
             showState(State.NetworkError);
             return;
