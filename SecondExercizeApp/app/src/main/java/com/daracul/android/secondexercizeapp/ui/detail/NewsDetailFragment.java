@@ -70,7 +70,7 @@ public class NewsDetailFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (getActivity() != null) {
             String position = getArguments().getString(KEY_FOR_POSITION);
-            db = new Db(getActivity().getApplicationContext());
+            db = new Db();
             loadDataFromDb(position);
         }
     }

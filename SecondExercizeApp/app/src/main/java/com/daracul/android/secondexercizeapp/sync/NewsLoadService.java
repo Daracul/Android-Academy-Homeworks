@@ -48,7 +48,7 @@ public class NewsLoadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        db = new Db(this.getApplicationContext());
+        db = new Db();
         disposable = NetworkUtils.networkUtils.getOnlineNetwork()
                 .timeout(1,TimeUnit.MINUTES)
                 .flatMap(new Function<Boolean, SingleSource<?>>() {

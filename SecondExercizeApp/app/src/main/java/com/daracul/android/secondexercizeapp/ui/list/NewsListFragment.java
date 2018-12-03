@@ -105,7 +105,7 @@ public class NewsListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (getActivity() != null) {
-            db = new Db(getActivity().getApplicationContext());
+            db = new Db();
             subcribeToDataFromDb();
         }
     }

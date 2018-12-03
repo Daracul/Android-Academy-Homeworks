@@ -2,6 +2,8 @@ package com.daracul.android.secondexercizeapp.database;
 
 import android.content.Context;
 
+import com.daracul.android.secondexercizeapp.application.MyApplication;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -16,8 +18,8 @@ public class Db {
 
     private AppDataBase dataBase;
 
-    public Db(Context context) {
-        dataBase = AppDataBase.getAppDatabase(context);
+    public Db() {
+        dataBase = AppDataBase.getAppDatabase(MyApplication.getContext());
     }
 
     public Single saveNews(final List<News> newsList){
