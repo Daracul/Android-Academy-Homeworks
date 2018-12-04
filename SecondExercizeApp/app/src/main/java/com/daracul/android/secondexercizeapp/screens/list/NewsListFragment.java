@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.list;
+package com.daracul.android.secondexercizeapp.screens.list;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,27 +23,20 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.database.Db;
 import com.daracul.android.secondexercizeapp.database.News;
-import com.daracul.android.secondexercizeapp.sync.DownloadingNews;
-import com.daracul.android.secondexercizeapp.ui.about.AboutActivity;
+import com.daracul.android.secondexercizeapp.screens.about.AboutActivity;
+import com.daracul.android.secondexercizeapp.screens.list.mvp.ListPresenter;
+import com.daracul.android.secondexercizeapp.screens.list.mvp.ListView;
 import com.daracul.android.secondexercizeapp.utils.State;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 import com.daracul.android.secondexercizeapp.utils.VerticalSpaceItemDecoration;
-
-import java.io.IOException;
 import java.util.List;
 
 
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
-public class NewsListFragment extends Fragment {
+public class NewsListFragment extends MvpAppCompatFragment implements ListView {
     private static final int SPACE_BETWEEN_CARDS_IN_DP = 4;
     private static final String CATEGORY_SPINNER_KEY = "category_key";
     private static final String LOG_TAG = "myLogs";
@@ -57,11 +48,10 @@ public class NewsListFragment extends Fragment {
     private View viewNoData;
     private SwipeRefreshLayout recyclerScreen;
     private TextView tvError;
-    private int spinnerPosition;
-    private Bundle bundle;
-    private Db db;
     private DetailFragmentListener detailFragmentListener;
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    @InjectPresenter
+    ListPresenter listPresenter;
 
     public interface DetailFragmentListener {
         void openDetailFragment(String id);
@@ -90,10 +80,6 @@ public class NewsListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            this.bundle = savedInstanceState;
-
-        }
         View view = inflater.inflate(R.layout.fragment_news_list, container, false);
         setHasOptionsMenu(true);
         setupUI(view);
@@ -101,32 +87,21 @@ public class NewsListFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (getActivity() != null) {
-            db = new Db();
-            subcribeToDataFromDb();
-        }
-    }
-
     private void setupUX() {
         btnTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadNews(getResources().getStringArray(R.array.category_spinner)
-                        [spinnerPosition].toLowerCase());
+                listPresenter.loadNews();
             }
         });
 
         recyclerScreen.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadNews(getCurrentNewsCategory(spinnerPosition));
+                listPresenter.loadNews();
             }
         });
 
-        //TODO 5. Move all listeners for views here
     }
 
     private void setupUI(View view) {
@@ -149,20 +124,16 @@ public class NewsListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadNews(getCurrentNewsCategory(spinnerPosition));
+                listPresenter.loadNews();
             }
         });
     }
-
 
     private void setupRecyclerView(View view) {
         list = view.findViewById(R.id.recycler);
         adapter = new NewsRecyclerAdapter(view.getContext(), clickListener);
         list.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager;
-//        if (Utils.isHorizontal(view.getContext())) {
-//            layoutManager = new GridLayoutManager(view.getContext(), 2);
-//        } else
         layoutManager = new LinearLayoutManager(view.getContext());
         list.addItemDecoration(
                 new VerticalSpaceItemDecoration(Utils.convertDpToPixel(SPACE_BETWEEN_CARDS_IN_DP,
@@ -178,32 +149,6 @@ public class NewsListFragment extends Fragment {
         viewNoData = view.findViewById(R.id.lt_no_data);
         tvError = view.findViewById(R.id.tv_error);
         recyclerScreen = view.findViewById(R.id.recycler_screen);
-
-    }
-
-    private void subcribeToDataFromDb() {
-        Disposable disposable = db.getNewsObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<News>>() {
-                    @Override
-                    public void accept(List<News> newsList) throws Exception {
-                        adapter.swapData(newsList);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e(LOG_TAG, throwable.toString());
-                    }
-                });
-        compositeDisposable.add(disposable);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        compositeDisposable.clear();
-        db = null;
     }
 
     @Override
@@ -219,42 +164,10 @@ public class NewsListFragment extends Fragment {
         if (adapter != null) adapter = null;
     }
 
-    private void loadNews(String category) {
-        showState(State.Loading);
-        recyclerScreen.setRefreshing(false);
-        final Disposable disposable = DownloadingNews.updateNews(db,category)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        list.scrollToPosition(0);
-                        showState(State.HasData);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        handleError(throwable);
-                    }
-                });
-        compositeDisposable.add(disposable);
-    }
-
-    private void handleError(Throwable throwable) {
-        Log.d("myLogs",throwable.getClass().getName() +" message: "+throwable.getMessage());
-        if (throwable instanceof IOException) {
-            showState(State.NetworkError);
-            return;
-        }
-        showState(State.ServerError);
-    }
-
-
-
-    private void showState(@NonNull State state) {
-        // TODO 3. Refactor this
+    public void showState(@NonNull State state) {
         switch (state) {
             case HasData:
+                recyclerScreen.setRefreshing(false);
                 viewError.setVisibility(View.GONE);
                 viewLoading.setVisibility(View.GONE);
                 viewNoData.setVisibility(View.GONE);
@@ -291,7 +204,6 @@ public class NewsListFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
@@ -308,13 +220,11 @@ public class NewsListFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        if (bundle != null) {
-            spinner.setSelection(bundle.getInt(CATEGORY_SPINNER_KEY, 0));
-        }
+        spinner.setSelection(listPresenter.getSpinnerPosition());
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                spinnerPosition = position;
+                listPresenter.setSpinnerPosition(position);
             }
 
             @Override
@@ -334,15 +244,8 @@ public class NewsListFragment extends Fragment {
         }
     }
 
-    private String getCurrentNewsCategory(int spinnerPosition) {
-        return getResources().getStringArray(R.array.category_spinner)[spinnerPosition].toLowerCase();
-    }
-
-
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(CATEGORY_SPINNER_KEY, spinnerPosition);
-
+    public void subcribeDataFromDb(@NonNull List<News> newsList) {
+        adapter.swapData(newsList);
     }
 }

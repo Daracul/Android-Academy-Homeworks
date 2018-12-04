@@ -16,7 +16,7 @@
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.list.NewsListFragment"
+            tools:context=".screens.list.NewsListFragment"
             tools:listitem="@layout/news_item" />
 
         <android.support.design.widget.FloatingActionButton

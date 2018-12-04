@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.detail.mvp;
+package com.daracul.android.secondexercizeapp.screens.detail.mvp;
 
 import android.support.annotation.NonNull;
 

@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.about.mvp;
+package com.daracul.android.secondexercizeapp.screens.about.mvp;
 
 
 import android.content.Context;

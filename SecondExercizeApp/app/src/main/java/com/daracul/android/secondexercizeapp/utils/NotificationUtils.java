@@ -11,7 +11,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.daracul.android.secondexercizeapp.R;
 import com.daracul.android.secondexercizeapp.sync.StopServiceReciever;
-import com.daracul.android.secondexercizeapp.ui.list.MainActivity;
+import com.daracul.android.secondexercizeapp.screens.list.MainActivity;
 
 
 public class NotificationUtils {

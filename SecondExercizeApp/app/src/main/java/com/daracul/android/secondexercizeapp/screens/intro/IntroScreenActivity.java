@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.intro;
+package com.daracul.android.secondexercizeapp.screens.intro;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,8 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.sync.NewsLoadService;
-import com.daracul.android.secondexercizeapp.ui.list.MainActivity;
+import com.daracul.android.secondexercizeapp.screens.list.MainActivity;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 
 import java.util.ArrayList;

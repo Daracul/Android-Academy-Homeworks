@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.list;
+package com.daracul.android.secondexercizeapp.screens.list;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

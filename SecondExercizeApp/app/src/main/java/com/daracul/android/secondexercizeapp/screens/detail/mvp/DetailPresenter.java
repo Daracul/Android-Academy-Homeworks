@@ -1,6 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.detail.mvp;
-
-import android.util.Log;
+package com.daracul.android.secondexercizeapp.screens.detail.mvp;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;

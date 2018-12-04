@@ -16,9 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.list.MainActivity" />
+        <activity android:name=".screens.list.MainActivity" />
         <activity
-            android:name=".ui.intro.IntroScreenActivity"
+            android:name=".screens.intro.IntroScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.about.AboutActivity" />
+        <activity android:name=".screens.about.AboutActivity" />
 
         <service
             android:name=".sync.NewsLoadService"

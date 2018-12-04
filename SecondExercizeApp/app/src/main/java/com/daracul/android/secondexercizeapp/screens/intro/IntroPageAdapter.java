@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.intro;
+package com.daracul.android.secondexercizeapp.screens.intro;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

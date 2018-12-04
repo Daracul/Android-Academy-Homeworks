@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.list;
+package com.daracul.android.secondexercizeapp.screens.list;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 
 import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.ui.detail.NewsDetailFragment;
+import com.daracul.android.secondexercizeapp.screens.detail.NewsDetailFragment;
 
 
 

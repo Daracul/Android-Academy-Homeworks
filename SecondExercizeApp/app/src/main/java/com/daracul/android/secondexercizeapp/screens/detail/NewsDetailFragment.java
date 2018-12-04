@@ -1,10 +1,9 @@
-package com.daracul.android.secondexercizeapp.ui.detail;
+package com.daracul.android.secondexercizeapp.screens.detail;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,24 +18,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
-import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.database.Db;
-import com.daracul.android.secondexercizeapp.database.News;
-import com.daracul.android.secondexercizeapp.ui.detail.mvp.DetailPresenter;
-import com.daracul.android.secondexercizeapp.ui.detail.mvp.DetailView;
+import com.daracul.android.secondexercizeapp.screens.detail.mvp.DetailPresenter;
+import com.daracul.android.secondexercizeapp.screens.detail.mvp.DetailView;
 import com.daracul.android.secondexercizeapp.utils.Utils;
 
 
 import java.util.Date;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class NewsDetailFragment extends MvpAppCompatFragment implements DetailView {
     public static final String KEY_FOR_POSITION = "position_key";

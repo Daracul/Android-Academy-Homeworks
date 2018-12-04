@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.about;
+package com.daracul.android.secondexercizeapp.screens.about;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,8 +19,8 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import com.daracul.android.secondexercizeapp.R;
-import com.daracul.android.secondexercizeapp.ui.about.mvp.AboutPresenter;
-import com.daracul.android.secondexercizeapp.ui.about.mvp.AboutView;
+import com.daracul.android.secondexercizeapp.screens.about.mvp.AboutPresenter;
+import com.daracul.android.secondexercizeapp.screens.about.mvp.AboutView;
 
 
 public class AboutActivity extends MvpAppCompatActivity implements AboutView {

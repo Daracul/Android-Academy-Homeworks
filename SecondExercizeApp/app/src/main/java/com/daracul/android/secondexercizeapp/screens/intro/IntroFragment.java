@@ -1,4 +1,4 @@
-package com.daracul.android.secondexercizeapp.ui.intro;
+package com.daracul.android.secondexercizeapp.screens.intro;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
